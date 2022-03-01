@@ -1,0 +1,330 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@font-face {
+  font-family: "nasalization";
+  src: url("./assets/fonts/nasalization-rg.otf");
+}
+
+$secondary-bg-color: #252525;
+$font-color-sign: #4b4b4b;
+$primary-bg-color: #080808c2;
+$primary-bg-color-hover: #3333337e;
+$font-color: #c5c3c3;
+$font-sm: 13.5px;
+$font-xm: 12px;
+$font-md: 16.5px;
+$club-red: #d02452d3;
+$club-red-hover: #d3768fd3;
+
+body,
+html {
+  background: $primary-bg-color;
+  width: 100%;
+  font-size: 14.5px;
+}
+body {
+  min-height: 100vh;
+  overflow-y: auto;
+
+  
+}
+* {
+  border: 0;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: "DM Sans";
+}
+*::-webkit-scrollbar-track {
+  display: none;
+  // -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  // box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: $primary-bg-color;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+  width: 5px;
+  background-color: $primary-bg-color;
+}
+
+*::-webkit-scrollbar-thumb {
+  display: none;
+  border-radius: 10px;
+  // -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  // box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: $club-red;
+}
+
+
+
+circle {
+  fill: transparent;
+
+  &.track {
+    stroke: rgb(104, 102, 102);
+    stroke-width: 1.5;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    &:hover {
+      stroke-width: 4;
+    }
+  }
+  &.progress1 {
+    transform: rotate(-90deg);
+    transform-origin: center;
+    stroke-width: 3;
+    stroke-linecap: round;
+    // filter: url(#glow);
+    fill: url(#image);
+
+    &:hover {
+      stroke-width: 4;
+    }
+  }
+  &.progress2 {
+    stroke: #722d2d;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    &:hover {
+      stroke-width: 4;
+    }
+  }
+  &.blink {
+    fill: #ff000000;
+  }
+  &.loading-bg {
+    fill: transparent;
+  }
+}
+
+.hover-menu {
+  z-index: 99;
+  min-width: 150px;
+  position: fixed;
+  background-color: $secondary-bg-color;
+  height: auto;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  &.active {
+    opacity: 1;
+    border: 1px solid black;
+    border-radius: 8px;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+
+    text-align: right;
+    font-size: $font-sm;
+    .title {
+      padding: 8px 30px 8px 16px;
+    }
+    .title-balance {
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      padding: 8px 30px 8px 0;
+      margin-top: 2px;
+      .red-bar {
+        margin-right: 8px;
+        margin-left: 16px;
+        height: 5px;
+        width: 30px;
+        border-radius: 20px;
+        background-color: $club-red;
+      }
+    }
+    .stat-item {
+      margin-bottom: 4px;
+      padding: 0 30px;
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      font-size: $font-xm;
+    }
+    .stat-item-icon {
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      font-size: $font-xm;
+      .coin {
+        width: 30px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        img {
+          height: 15px;
+          width: 15px;
+        }
+      }
+    }
+    .sign {
+      color: $font-color-sign;
+      margin-right: 4px;
+      font-weight: bold;
+    }
+  }
+}
+
+.atlas-bg {
+  fill: white;
+}
+
+.app-spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #080808;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+
+  /**
+ * ==============================================
+ * Dot Pulse
+ * ==============================================
+ */
+  .dot-pulse {
+    position: relative;
+    left: -9999px;
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    background-color: $font-color;
+    color: $font-color;
+    box-shadow: 9999px 0 0 -5px $font-color;
+    animation: dotPulse 1.5s infinite linear;
+    animation-delay: 0.25s;
+    margin-left: 20px;
+  }
+
+  .dot-pulse::before,
+  .dot-pulse::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    background-color: $font-color;
+    color: $font-color;
+  }
+
+  .dot-pulse::before {
+    box-shadow: 9984px 0 0 -5px $font-color;
+    animation: dotPulseBefore 1.5s infinite linear;
+    animation-delay: 0s;
+  }
+
+  .dot-pulse::after {
+    box-shadow: 10014px 0 0 -5px $font-color;
+    animation: dotPulseAfter 1.5s infinite linear;
+    animation-delay: 0.5s;
+  }
+
+  @keyframes dotPulseBefore {
+    0% {
+      box-shadow: 9984px 0 0 -5px $font-color;
+    }
+    30% {
+      box-shadow: 9984px 0 0 2px $font-color;
+    }
+    60%,
+    100% {
+      box-shadow: 9984px 0 0 -5px $font-color;
+    }
+  }
+
+  @keyframes dotPulse {
+    0% {
+      box-shadow: 9999px 0 0 -5px $font-color;
+    }
+    30% {
+      box-shadow: 9999px 0 0 2px $font-color;
+    }
+    60%,
+    100% {
+      box-shadow: 9999px 0 0 -5px $font-color;
+    }
+  }
+
+  @keyframes dotPulseAfter {
+    0% {
+      box-shadow: 10014px 0 0 -5px $font-color;
+    }
+    30% {
+      box-shadow: 10014px 0 0 2px $font-color;
+    }
+    60%,
+    100% {
+      box-shadow: 10014px 0 0 -5px $font-color;
+    }
+  }
+}
+
+.ProgressBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 25px;
+}
+
+.ProgressBar-background,
+.ProgressBar-percentage {
+  fill: #fff;
+}
+
+.ProgressBar-background {
+  fill-opacity: 0.2;
+}
+
+.ProgressBar-percentage {
+  fill-opacity: 0.6;
+}
+
+// utils
+.flex-1 {
+  flex: 1;
+}
+.flex-2 {
+  flex: 2;
+}
+
+.glow {
+  color: #fff;
+  text-align: center;
+  animation: neon 0.08s ease-in-out infinite alternate;
+}
+
+@keyframes neon {
+  from {
+    text-shadow: 0 0 6px rgba(202, 228, 225, 0.92),
+      0 0 30px rgba(202, 228, 225, 0.34), 0 0 12px rgba(30, 132, 242, 0.52),
+      0 0 21px rgba(30, 132, 242, 0.92), 0 0 34px rgba(30, 132, 242, 0.78),
+      0 0 54px rgba(30, 132, 242, 0.92);
+  }
+  to {
+    text-shadow: 0 0 6px rgba(202, 228, 225, 0.98),
+      0 0 30px rgba(202, 228, 225, 0.42), 0 0 12px rgba(30, 132, 242, 0.58),
+      0 0 22px rgba(30, 132, 242, 0.84), 0 0 38px rgba(30, 132, 242, 0.88),
+      0 0 60px rgba(30, 132, 242, 1);
+  }
+}
+
+.history {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    margin-right: 8px;
+  }
+}

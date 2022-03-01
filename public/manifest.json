@@ -1,0 +1,16 @@
+{
+  "short_name": "Pitstop",
+  "name": "Create React App Sample",
+  "icons": [
+    {
+      "src": "club.svg",
+      "type": "image/png",
+      "sizes": "90x90 128x128 192x192"
+    }
+  
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
