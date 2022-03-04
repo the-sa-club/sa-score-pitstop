@@ -16,6 +16,7 @@ import { thousandsFormatter } from "../utils";
 import { AtlasIcon } from "./Atlas";
 import Resources from "./Resources";
 import { Container } from "./shared/styled/Styled";
+import { ReactComponent as LoadingSpinner } from "../assets/images/spinner.svg";
 
 export const Content = () => {
   const fleets = useFleetStore((state) => state.fleets);
@@ -39,6 +40,13 @@ export const Content = () => {
   );
   const [totalClaim, setTotalClaim] = React.useState(0);
   const { publicKey, signAllTransactions, signTransaction } = useWallet();
+  const isRefreshing = useAppStore((state) => state.refreshing);
+
+  const onRefresh = () => {
+    if (publicKey) {
+      FleetService.refresh(publicKey);
+    }
+  };
 
   React.useEffect(() => {
     if (fleets.length > 0) {
@@ -126,8 +134,32 @@ export const Content = () => {
           <div style={{width:10}}></div>
 
           <ResourcesSection>
-           
+          
             <Resources />
+            <Container>
+            <div
+              style={{
+                width: "100%",
+                justifyContent: "end",
+                display: "flex",
+                marginTop: 20,
+              }}
+            >
+              {publicKey ? (
+                <RefreshButton disabled={isRefreshing} onClick={onRefresh}>
+                  {isRefreshing ? (
+                    <>
+                      REFRESHING <LoadingSpinner style={{ marginLeft: 8 }} />
+                    </>
+                  ) : (
+                    "REFRESH"
+                  )}{" "}
+                </RefreshButton>
+              ) : (
+                <></>
+              )}
+            </div>
+          </Container>
           </ResourcesSection>
         </ContentWrapper>
       </Container>
@@ -198,5 +230,23 @@ const PendingSection = styled.div`
     justify-content: space-between;
     margin: 16px 8px;
     min-height: 360px;
+  }
+`;
+
+const RefreshButton = styled.button`
+  border: 1px solid ${PALLETE.CLUB_RED};
+  color: ${PALLETE.CLUB_RED};
+  font-size: ${PALLETE.FONT_SM};
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 4px;
+  &:hover {
+    color: ${PALLETE.CLUB_RED_HOVER};
+    border: 1px solid ${PALLETE.CLUB_RED_HOVER};
   }
 `;

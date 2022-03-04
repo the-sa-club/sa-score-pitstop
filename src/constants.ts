@@ -40,7 +40,8 @@ export const PALLETE = {
   FONT_SM: "13.5px",
   FONT_XM: "12px",
   FONT_MD: "16.5px",
-  CLUB_RED: "#d02452d3",
+  // CLUB_RED: "#d02452d3",
+  CLUB_RED: "#142a54",
   CLUB_RED_DENSE: "#d02452",
   CLUB_RED_HOVER: "#d3768fd3",
   DEVICE : {

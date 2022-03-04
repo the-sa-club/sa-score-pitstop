@@ -122,7 +122,7 @@ function App() {
       ) : (
         <LoadingProvider>
           <Header />
-          <Container>
+          {/* <Container>
             <div
               style={{
                 width: "100%",
@@ -145,7 +145,7 @@ function App() {
                 <></>
               )}
             </div>
-          </Container>
+          </Container> */}
           <Content />
           <Fleet />
         </LoadingProvider>

@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @font-face {
-  font-family: "nasalization";
-  src: url("./assets/fonts/nasalization-rg.otf");
+  font-family: "Norse";
+  src: url("./assets/fonts/norse.otf");
 }
 
 $secondary-bg-color: #252525;
@@ -12,7 +12,8 @@ $font-color: #c5c3c3;
 $font-sm: 13.5px;
 $font-xm: 12px;
 $font-md: 16.5px;
-$club-red: #d02452d3;
+// $club-red: #d02452d3;
+$club-red: #142a54;
 $club-red-hover: #d3768fd3;
 
 body,
@@ -24,8 +25,6 @@ html {
 body {
   min-height: 100vh;
   overflow-y: auto;
-
-  
 }
 * {
   border: 0;
@@ -55,8 +54,6 @@ body {
   // box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: $club-red;
 }
-
-
 
 circle {
   fill: transparent;

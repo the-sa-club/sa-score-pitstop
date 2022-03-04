@@ -59,7 +59,7 @@ const AppSpinner = () => {
           </clipPath>
         </defs>
         <rect x="0" y="0" width="100%" height="100%" fill="#b1b1b1" rx="4%" />
-        <rect x="0" y="0" width={`${appLoading.pct}%`} height="100%" fill="#d02452d3" clipPath="url(#ProgressBar-clipPath)" />
+        <rect x="0" y="0" width={`${appLoading.pct}%`} height="100%" fill="#142a54" clipPath="url(#ProgressBar-clipPath)" />
       </svg>
 
       <div

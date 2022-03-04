@@ -1,9 +1,9 @@
 {
-  "short_name": "Pitstop",
+  "short_name": "Hangar",
   "name": "Create React App Sample",
   "icons": [
     {
-      "src": "club.svg",
+      "src": "heim.svg",
       "type": "image/png",
       "sizes": "90x90 128x128 192x192"
     }
