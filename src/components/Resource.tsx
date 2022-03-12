@@ -139,9 +139,9 @@ const Resource: React.FC<ResourceProps> = ({
           <div className="title">{getTooltipTitleProgress2(id)}</div>
           <div className="stat-item">
             <span className="sign" style={{ marginRight: 4 }}>
-              %
+              {round((resourceData.supply / resourceData.maxUnits) * 100) > 100 ? <span style={{color:'#fff', fontWeight:400}}> &gt; </span> :''}%
             </span>
-            <span className="value">{round((resourceData.supply / resourceData.maxUnits) * 100)}</span>
+            <span className="value">{Math.min(round((resourceData.supply / resourceData.maxUnits) * 100), 100)}</span>
           </div>
           <div className="stat-item">
             <span className="sign">{id}</span>

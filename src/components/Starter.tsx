@@ -1,9 +1,9 @@
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import styled from "styled-components";
 import { PALLETE } from "../constants";
+import { Align } from "./shared/styled/Styled";
 
 export const Starter = () => {
-
   return (
     <Wrapper>
       <Logo>
@@ -53,7 +53,10 @@ export const Starter = () => {
         </svg>
         <Title>SCORE Pitstop</Title>
       </Logo>
-      <WalletMultiButton/>
+
+      <WalletMultiButton />
+
+      <VersionIndicator>(Beta Version)</VersionIndicator>
     </Wrapper>
   );
 };
@@ -87,4 +90,11 @@ const Logo = styled.div`
   svg {
     margin-right: 8px;
   }
+`;
+
+const VersionIndicator = styled.b`
+  font-size: ${PALLETE.FONT_SM} !important;
+  font-family: "nasalization";
+  margin: 20px 16px;
+  color: ${PALLETE.FONT_COLOR};
 `;

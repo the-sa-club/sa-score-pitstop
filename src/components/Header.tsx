@@ -200,7 +200,12 @@ export const Header = () => {
           </Menu>
           <StatsMobile>
             <div
-              style={{ display: "flex", alignItems: "center",justifyContent:'center',  width: '25%' }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "25%",
+              }}
             >
               {thousandsFormatter(
                 inventory?.supplies.fuel || 0,
@@ -216,7 +221,12 @@ export const Header = () => {
             </div>
 
             <div
-              style={{ display: "flex", alignItems: "center",justifyContent:'center',  width: '25%' }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "25%",
+              }}
             >
               {thousandsFormatter(
                 inventory?.supplies.food || 0,
@@ -232,7 +242,12 @@ export const Header = () => {
             </div>
 
             <div
-              style={{ display: "flex", alignItems: "center",justifyContent:'center',  width: '25%' }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "25%",
+              }}
             >
               {thousandsFormatter(
                 inventory?.supplies.arms || 0,
@@ -248,7 +263,12 @@ export const Header = () => {
             </div>
 
             <div
-              style={{ display: "flex", alignItems: "center",justifyContent:'center',  width: '25%' }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "25%",
+              }}
             >
               {thousandsFormatter(
                 inventory?.supplies.tools || 0,
@@ -264,7 +284,13 @@ export const Header = () => {
             </div>
 
             <div
-              style={{ display: "flex", alignItems: "center",justifyContent:'center',  width: '25%', marginTop: 12 }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "25%",
+                marginTop: 12,
+              }}
             >
               {/* {loading ? <Rotate>{RefreshIcon}</Rotate> : RefreshIcon} */}
               <span>{thousandsFormatter(atlasBalance, ATLAS_DECIMAL)}</span>
@@ -303,6 +329,8 @@ const WalletBtnWrapper = styled.div`
     }
   }
 `;
+
+
 
 const Menu = styled.div`
   display: flex;
@@ -373,7 +401,6 @@ const StatsMobile = styled(Stats)`
     justify-content: center;
     width: 100%;
     flex-wrap: wrap;
-    
   }
 `;
 

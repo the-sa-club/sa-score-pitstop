@@ -17,6 +17,7 @@ import { Container } from "./shared/styled/Styled";
 import Spinner from "./Spinner";
 import { Starter } from "./Starter";
 import { ReactComponent as LoadingSpinner } from "../assets/images/spinner.svg";
+import {Footer} from "./Footer";
 
 function App() {
   const { publicKey, connecting, disconnecting } = useWallet();
@@ -148,6 +149,7 @@ function App() {
           </Container>
           <Content />
           <Fleet />
+          <Footer />
         </LoadingProvider>
       )}
       <ErrorModal />
@@ -176,3 +178,4 @@ const RefreshButton = styled.button`
     border: 1px solid ${PALLETE.CLUB_RED_HOVER};
   }
 `;
+
