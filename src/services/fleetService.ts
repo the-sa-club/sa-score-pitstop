@@ -247,7 +247,6 @@ export class FleetService {
     
     const foodMaxSeconds = resourcesData.food.maxSeconds;
 
-
     // ? how many units
     selectedFleets.forEach((fleet) => {
       unitsTarget.ammo += (foodMaxSeconds * fleet.resources.arms.burnRate); 
@@ -281,7 +280,7 @@ export class FleetService {
 
   // ! Urgent
   if (mode == BUY_SUPPLY_MODES.URGENT) {
-    const maxSeconds = 12 * 60 * 60;
+    const maxSeconds = 12 * 60 * 60;  
     const unitsTarget = {
       food: 0,
       ammo: 0,
@@ -354,8 +353,7 @@ export class FleetService {
         
         return min;
       })
-    );
-
+    ); 
     const unitsTarget = {
       food: 0,
       ammo: 0,
