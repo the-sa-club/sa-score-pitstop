@@ -86,7 +86,7 @@ export const Resources: React.FC<Props> = () => {
           inventory,
           resourcesData,
           buySupplyMode,
-          selectedFleets,
+          selectedFleets.length > 0 ? selectedFleets : allFleets,
           setLoadingInfo
         );
 
