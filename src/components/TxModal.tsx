@@ -9,7 +9,7 @@ import fuelImg from "../assets/images/fuel.png";
 import toolImg from "../assets/images/tool.png";
 import {
   ATLAS_MINT,
-  CONN, PALLETE, RESOURCE_DECIMAL, USDC_DECIMAL
+  CONN, PALETTE, RESOURCE_DECIMAL, USDC_DECIMAL
 } from "../constants";
 import { useLoader } from "../context/LoadingContext";
 import { useAppStore } from "../data/store";
@@ -57,7 +57,7 @@ export const TxModal: React.FC<Props> = ({
   const { setLoadingInfo } = useLoader();
   const [tip, setTip] = React.useState(0.1);
 
-  const calulateSubtotal = () => {
+  const calculateSubtotal = () => {
     const subtotal =
       (data?.ammo.atlas || 0) +
       (data?.food.atlas || 0) +
@@ -84,7 +84,7 @@ export const TxModal: React.FC<Props> = ({
           MarketService.getTipsInstructions(
             publicKey,
             ATLAS_MINT,
-            calulateSubtotal() * tip
+            calculateSubtotal() * tip
           )
         )) as TransactionInstruction[];
 
@@ -185,7 +185,7 @@ export const TxModal: React.FC<Props> = ({
             <thead>
               <tr>
                 <TH style={{ width: 10 }}></TH>
-                <TH>Type</TH>
+                <TH>Asset</TH>
                 <TH align="right" style={{paddingRight: 40}}>Amount</TH>
                 <TH align="right"></TH>
                 <TH></TH>
@@ -298,7 +298,7 @@ export const TxModal: React.FC<Props> = ({
                 <TD>Subtotal:</TD>
                 <TD></TD>
                 <TD align="right">
-                  {thousandsFormatter(calulateSubtotal(), 4)}{" "}
+                  {thousandsFormatter(calculateSubtotal(), 4)}{" "}
                   <AtlasIconWrapper>
                     <AtlasIcon width={15} height={15} />
                   </AtlasIconWrapper>
@@ -325,7 +325,7 @@ export const TxModal: React.FC<Props> = ({
                   </Tips>
                 </TD>
                 <TD align="right">
-                  {thousandsFormatter(calulateSubtotal() * tip, 4)}{" "}
+                  {thousandsFormatter(calculateSubtotal() * tip, 4)}{" "}
                   <AtlasIconWrapper>
                     <AtlasIcon width={15} height={15} />
                   </AtlasIconWrapper>
@@ -338,7 +338,7 @@ export const TxModal: React.FC<Props> = ({
                 <TD>Total:</TD>
                 <TD></TD>
                 <TD align="right">
-                  {thousandsFormatter(calulateSubtotal() * (1 + tip), 4)}{" "}
+                  {thousandsFormatter(calculateSubtotal() * (1 + tip), 4)}{" "}
                   <AtlasIconWrapper>
                     <AtlasIcon width={15} height={15} />
                   </AtlasIconWrapper>
@@ -352,7 +352,7 @@ export const TxModal: React.FC<Props> = ({
                 <TD></TD>
                 <TD align="right">
                   {thousandsFormatter(
-                    calulateSubtotal() * (1 + tip) * (data?.market.rate || 0),
+                    calculateSubtotal() * (1 + tip) * (data?.market.rate || 0),
                     USDC_DECIMAL
                   )}{" "}
                   <AtlasIconWrapper>
@@ -380,9 +380,9 @@ export const TxModal: React.FC<Props> = ({
 
 const Wrapper = styled.div`
   padding: 20px 0;
-  border: 1px solid ${PALLETE.PRIMARY_BG_COLOR};
+  border: 1px solid ${PALETTE.PRIMARY_BG_COLOR};
   background: #10141f;
-  box-shadow: 0 0 2px 1px ${PALLETE.PRIMARY_BG_COLOR};
+  box-shadow: 0 0 2px 1px ${PALETTE.PRIMARY_BG_COLOR};
   border-radius: 4px;
   overflow-y: auto;
   max-height: 100vh;
@@ -399,7 +399,7 @@ const CloseIconWrapper = styled.div`
   cursor: pointer;
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
   padding: 16px 16px;
   text-align: left;
 `;
@@ -409,12 +409,13 @@ const Table = styled.table`
   border-collapse: collapse;
   width: 100%;
   min-width: 300px;
+  
 `;
 
 const TH = styled.th`
   padding: 16px 10px;
   text-align: ${(p) => p.align ?? "left"};
-  font-size: ${PALLETE.FONT_MD};
+  font-size: ${PALETTE.FONT_MD};
   border-bottom: 1px solid #d024526b;
 `;
 
@@ -426,12 +427,14 @@ const TD = styled.td`
 const Sperator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${PALLETE.FONT_COLOR};
-  /* box-shadow: 0 0 4px 1px ${PALLETE.FONT_COLOR}; */
+  background-color: ${PALETTE.FONT_COLOR};
+  /* box-shadow: 0 0 4px 1px ${PALETTE.FONT_COLOR}; */
 `;
 
 const Body = styled.div`
   padding: 8px 16px;
+  max-width: 90vw;
+  overflow-x: auto;
 `;
 
 const ResourceIcon = styled.div<{ src: string }>`
@@ -445,13 +448,13 @@ const ResourceIcon = styled.div<{ src: string }>`
 
 const Cost = styled.div`
   flex: 1;
-  font-size: ${PALLETE.FONT_MD};
+  font-size: ${PALETTE.FONT_MD};
   display: inline-block;
 `;
 
 const Units = styled.div`
   display: inline-block;
-  font-size: ${PALLETE.FONT_MD};
+  font-size: ${PALETTE.FONT_MD};
 `;
 
 const ResourceName = styled.div``;
@@ -503,9 +506,9 @@ const Tip = styled.div<{ selected: boolean }>`
   text-align: center;
   margin: 0 2px;
   background: ${(p) =>
-    p.selected ? PALLETE.FONT_COLOR_SIGN : PALLETE.CLUB_RED};
+    p.selected ? PALETTE.FONT_COLOR_SIGN : PALETTE.CLUB_RED};
   border-radius: 4px;
-  color: ${PALLETE.FONT_COLOR};
+  color: ${PALETTE.FONT_COLOR};
   cursor: pointer;
 `;
 

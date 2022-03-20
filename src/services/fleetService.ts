@@ -1,5 +1,5 @@
-import { Token } from "@solana/spl-token";
-import { PublicKey } from "@solana/web3.js";
+import {Token} from "@solana/spl-token";
+import {PublicKey} from "@solana/web3.js";
 import {
     getAllFleetsForUserPublicKey,
     getScoreVarsShipInfo,
@@ -7,13 +7,22 @@ import {
     ShipStakingInfo
 } from "@staratlas/factory";
 import axios from "axios";
-import { floor } from "mathjs";
+import {floor} from "mathjs";
 import ammoImg from "../assets/images/ammo.png";
 import foodImg from "../assets/images/food.png";
 import fuelImg from "../assets/images/fuel.png";
 import toolImg from "../assets/images/tool.png";
-import { ARMS_TOKEN, BUY_SUPPLY_MODES, COLORS, CONN, FLEET_PROGRAM, FOOD_TOKEN, FUEL_TOKEN, TOOLS_TOKEN } from "../constants";
-import { useAppStore, useFleetStore, useResourceStore } from "../data/store";
+import {
+    ARMS_TOKEN,
+    BUY_SUPPLY_MODES,
+    COLORS,
+    CONN,
+    FLEET_PROGRAM,
+    FOOD_TOKEN,
+    FUEL_TOKEN,
+    TOOLS_TOKEN
+} from "../constants";
+import {useAppStore, useFleetStore, useResourceStore} from "../data/store";
 import {
     IFleet,
     IInventory,
@@ -24,11 +33,8 @@ import {
     TOKENS,
     WaitingSignature
 } from "../data/types";
-import { getHours, retryAsync, timeout } from "../utils";
-import {
-    MarketService
-} from "./marketService";
-
+import {getHours, retryAsync, timeout} from "../utils";
+import {MarketService} from "./marketService";
 
 
 export class FleetService {
@@ -36,7 +42,7 @@ export class FleetService {
 
 
     // ! PUBLIC =======================
-    public static async getInventorySupplies(pubkey:PublicKey) : Promise<InventorySupplies> {
+    public static async getInventorySupplies(pubkey: PublicKey): Promise<InventorySupplies> {
 
         return {
             food: await FleetService.getTokenAmmount(FOOD_TOKEN, pubkey),
@@ -51,27 +57,27 @@ export class FleetService {
             if (useAppStore.getState().refreshing) return;
             useAppStore.getState().setRefreshing(true)
             Promise.all([
-                FleetService.getInventorySupplies(publicKey).then((inventorySupplies) => useFleetStore.getState().setInventory({ supplies: inventorySupplies }))
-                    .then(() => FleetService.getAllFleets(publicKey).then((fleets) =>  useFleetStore.getState().setFleets(fleets))),
+                FleetService.getInventorySupplies(publicKey).then((inventorySupplies) => useFleetStore.getState().setInventory({supplies: inventorySupplies}))
+                    .then(() => FleetService.getAllFleets(publicKey).then((fleets) => useFleetStore.getState().setFleets(fleets))),
                 MarketService.getBalanceAtlas(publicKey).then((balance) => useResourceStore.getState().setAtlasBalance(balance))
-            ]).finally(() =>  useAppStore.getState().setRefreshing(false))
-        },20000)
+            ]).finally(() => useAppStore.getState().setRefreshing(false))
+        }, 20000)
     }
 
     public static async refresh(publicKey: PublicKey) {
         if (useAppStore.getState().refreshing) return;
         useAppStore.getState().setRefreshing(true)
         Promise.all([
-            FleetService.getInventorySupplies(publicKey).then((inventorySupplies) => useFleetStore.getState().setInventory({ supplies: inventorySupplies }))
-                .then(() => FleetService.getAllFleets(publicKey).then((fleets) =>  useFleetStore.getState().setFleets(fleets))),
+            FleetService.getInventorySupplies(publicKey).then((inventorySupplies) => useFleetStore.getState().setInventory({supplies: inventorySupplies}))
+                .then(() => FleetService.getAllFleets(publicKey).then((fleets) => useFleetStore.getState().setFleets(fleets))),
             MarketService.getBalanceAtlas(publicKey).then((balance) => useResourceStore.getState().setAtlasBalance(balance))
-        ]).finally(() =>  useAppStore.getState().setRefreshing(false))
+        ]).finally(() => useAppStore.getState().setRefreshing(false))
 
     }
 
-    public static async getAllFleets(pubKey: PublicKey) : Promise<IFleet[]> {
+    public static async getAllFleets(pubKey: PublicKey): Promise<IFleet[]> {
 
-        const fleetsRaw =  await retryAsync(() => getAllFleetsForUserPublicKey(CONN, pubKey, FLEET_PROGRAM)) ;
+        const fleetsRaw = await retryAsync(() => getAllFleetsForUserPublicKey(CONN, pubKey, FLEET_PROGRAM));
         if (!fleetsRaw) {
             return [];
         }
@@ -92,7 +98,7 @@ export class FleetService {
                     );
 
 
-                    const urlSplit = shipNftInfo.data.image.slice(0,-4).split("/")
+                    const urlSplit = shipNftInfo.data.image.slice(0, -4).split("/")
                     const imageName = urlSplit[urlSplit.length - 1]
                     fleets.push({
                         ...fleet,
@@ -113,7 +119,7 @@ export class FleetService {
 
     }
 
-    public static getFleetRemainingResources(shipInfo: ScoreVarsShipInfo, fleet: ShipStakingInfo) : {[key:string]:ResourceRemaining} {
+    public static getFleetRemainingResources(shipInfo: ScoreVarsShipInfo, fleet: ShipStakingInfo): { [key: string]: ResourceRemaining } {
 
         let timePassSinceStart = FleetService.timePassSinceLastAction(fleet);
 
@@ -126,7 +132,7 @@ export class FleetService {
 
     }
 
-    public static calculateFleetRemainingTime(fleet: IFleet) : number {
+    public static calculateFleetRemainingTime(fleet: IFleet): number {
 
         const minTime = Math.min(
             fleet.resources.arms.secondsLeft,
@@ -139,11 +145,9 @@ export class FleetService {
 
     }
 
-    public static async createInvoice(inventory: IInventory, resourcesData: { [key: string]: IResourceData; }, mode: string, selectedFleets: IFleet[], startAppLoading: (...args:any) => void) : Promise<InvoiceResources | undefined> {
+    public static async createInvoice(inventory: IInventory, resourcesToBuy: InvoiceResources | undefined, resourcesData: { [key: string]: IResourceData; }, mode: string, selectedFleets: IFleet[], startAppLoading: (...args: any) => void): Promise<InvoiceResources | undefined> {
 
-
-
-        const resourcesToBuy: InvoiceResources = {
+        const _resourcesToBuy: InvoiceResources = {
             ammo: {
                 amount: 0,
                 atlas: 0,
@@ -176,19 +180,35 @@ export class FleetService {
             toolPriceDetials,
         ] = await Promise.all([
             MarketService.getAmmoMarketPriceDetials().then(details => {
-                startAppLoading({loading: true, message: 'Getting Market Prices for Resources', pct: useAppStore.getState().appLoading.pct! + 10})
+                startAppLoading({
+                    loading: true,
+                    message: 'Getting Market Prices for Resources',
+                    pct: useAppStore.getState().appLoading.pct! + 10
+                })
                 return details;
             }),
             MarketService.getFoodMarketPriceDetials().then(details => {
-                startAppLoading({loading: true, message: 'Getting Market Prices for Resources', pct: useAppStore.getState().appLoading.pct! + 10})
+                startAppLoading({
+                    loading: true,
+                    message: 'Getting Market Prices for Resources',
+                    pct: useAppStore.getState().appLoading.pct! + 10
+                })
                 return details;
             }),
             MarketService.getFuelMarketPriceDetials().then(details => {
-                startAppLoading({loading: true, message: 'Getting Market Prices for Resources', pct: useAppStore.getState().appLoading.pct! + 10})
+                startAppLoading({
+                    loading: true,
+                    message: 'Getting Market Prices for Resources',
+                    pct: useAppStore.getState().appLoading.pct! + 10
+                })
                 return details;
             }),
             MarketService.getToolMarketPriceDetials().then(details => {
-                startAppLoading({loading: true, message: 'Getting Market Prices for Resources', pct: useAppStore.getState().appLoading.pct! + 10})
+                startAppLoading({
+                    loading: true,
+                    message: 'Getting Market Prices for Resources',
+                    pct: useAppStore.getState().appLoading.pct! + 10
+                })
                 return details;
             }),
         ]);
@@ -202,33 +222,37 @@ export class FleetService {
             return undefined;
         }
 
-        startAppLoading({loading: true, message: 'Calculating Resources for Invoice', pct: useAppStore.getState().appLoading.pct! + 20})
+        startAppLoading({
+            loading: true,
+            message: 'Calculating Resources for Invoice',
+            pct: useAppStore.getState().appLoading.pct! + 20
+        })
 
         // ! Full Tank
         if (mode == BUY_SUPPLY_MODES.FULL_TANKS) {
 
             // ? ammo
-            resourcesToBuy.ammo.amount = (resourcesData.ammo.untisNeedToBuy + 20);
-            resourcesToBuy.ammo.atlas = ammoPriceDetials.atlas * (resourcesData.ammo.untisNeedToBuy + 20);
-            resourcesToBuy.ammo.usdc = ammoPriceDetials.usdc * (resourcesData.ammo.untisNeedToBuy + 20);
+            _resourcesToBuy.ammo.amount = (resourcesData.ammo.untisNeedToBuy + 20);
+            _resourcesToBuy.ammo.atlas = ammoPriceDetials.atlas * (resourcesData.ammo.untisNeedToBuy + 20);
+            _resourcesToBuy.ammo.usdc = ammoPriceDetials.usdc * (resourcesData.ammo.untisNeedToBuy + 20);
 
             // ? food
-            resourcesToBuy.food.amount = (resourcesData.food.untisNeedToBuy + 20);
-            resourcesToBuy.food.atlas = foodPriceDetials.atlas * (resourcesData.food.untisNeedToBuy + 20);
-            resourcesToBuy.food.usdc = foodPriceDetials.usdc * (resourcesData.food.untisNeedToBuy + 20);
+            _resourcesToBuy.food.amount = (resourcesData.food.untisNeedToBuy + 20);
+            _resourcesToBuy.food.atlas = foodPriceDetials.atlas * (resourcesData.food.untisNeedToBuy + 20);
+            _resourcesToBuy.food.usdc = foodPriceDetials.usdc * (resourcesData.food.untisNeedToBuy + 20);
 
             // ? fuel
-            resourcesToBuy.fuel.amount = (resourcesData.fuel.untisNeedToBuy + 20);
-            resourcesToBuy.fuel.atlas = fuelPriceDetials.atlas * (resourcesData.fuel.untisNeedToBuy + 20);
-            resourcesToBuy.fuel.usdc = fuelPriceDetials.usdc * (resourcesData.fuel.untisNeedToBuy + 20);
+            _resourcesToBuy.fuel.amount = (resourcesData.fuel.untisNeedToBuy + 20);
+            _resourcesToBuy.fuel.atlas = fuelPriceDetials.atlas * (resourcesData.fuel.untisNeedToBuy + 20);
+            _resourcesToBuy.fuel.usdc = fuelPriceDetials.usdc * (resourcesData.fuel.untisNeedToBuy + 20);
 
             //? Tools
-            resourcesToBuy.tools.amount =( resourcesData.tools.untisNeedToBuy + 20);
-            resourcesToBuy.tools.atlas = toolPriceDetials.atlas *( resourcesData.tools.untisNeedToBuy + 20);
-            resourcesToBuy.tools.usdc = toolPriceDetials.usdc *( resourcesData.tools.untisNeedToBuy + 20);
+            _resourcesToBuy.tools.amount = (resourcesData.tools.untisNeedToBuy + 20);
+            _resourcesToBuy.tools.atlas = toolPriceDetials.atlas * (resourcesData.tools.untisNeedToBuy + 20);
+            _resourcesToBuy.tools.usdc = toolPriceDetials.usdc * (resourcesData.tools.untisNeedToBuy + 20);
 
             //? Market
-            resourcesToBuy.market.rate = ammoPriceDetials.rate;
+            _resourcesToBuy.market.rate = ammoPriceDetials.rate;
         }
 
         // ! Optimal
@@ -241,41 +265,40 @@ export class FleetService {
             }
 
             // ? food
-            resourcesToBuy.food.amount = (resourcesData.food.untisNeedToBuy + 20);
-            resourcesToBuy.food.atlas = foodPriceDetials.atlas * (resourcesData.food.untisNeedToBuy + 20) ;
-            resourcesToBuy.food.usdc = foodPriceDetials.usdc * (resourcesData.food.untisNeedToBuy + 20) ;
-
+            _resourcesToBuy.food.amount = (resourcesData.food.untisNeedToBuy + 20);
+            _resourcesToBuy.food.atlas = foodPriceDetials.atlas * (resourcesData.food.untisNeedToBuy + 20);
+            _resourcesToBuy.food.usdc = foodPriceDetials.usdc * (resourcesData.food.untisNeedToBuy + 20);
 
 
             // ? how many units
             selectedFleets.forEach((fleet) => {
                 const foodMaxSeconds = fleet.resources.food.maxSeconds;
-                unitsTarget.ammo += (foodMaxSeconds * fleet.resources.arms.burnRate);
-                unitsTarget.fuel += (foodMaxSeconds * fleet.resources.fuel.burnRate);
-                unitsTarget.tools += (foodMaxSeconds * fleet.resources.health.burnRate);
+                unitsTarget.ammo += (foodMaxSeconds * fleet.resources.arms.burnRatePerFleet);
+                unitsTarget.fuel += (foodMaxSeconds * fleet.resources.fuel.burnRatePerFleet);
+                unitsTarget.tools += (foodMaxSeconds * fleet.resources.health.burnRatePerFleet);
             });
 
             // ? ammo
-            const ammoUnitsToBuy = Math.max(( unitsTarget.ammo - (resourcesData.ammo.supply + resourcesData.ammo.unitsLeft) + 20), 0);
-            resourcesToBuy.ammo.amount = ammoUnitsToBuy;
-            resourcesToBuy.ammo.atlas = ammoPriceDetials.atlas * ammoUnitsToBuy;
-            resourcesToBuy.ammo.usdc = ammoPriceDetials.usdc * ammoUnitsToBuy;
+            const ammoUnitsToBuy = Math.max((unitsTarget.ammo - (resourcesData.ammo.supply + resourcesData.ammo.unitsLeft) + 20), 0);
+            _resourcesToBuy.ammo.amount = ammoUnitsToBuy;
+            _resourcesToBuy.ammo.atlas = ammoPriceDetials.atlas * ammoUnitsToBuy;
+            _resourcesToBuy.ammo.usdc = ammoPriceDetials.usdc * ammoUnitsToBuy;
 
             // ? fuel
-            const fuelUnitsToBuy = Math.max(( unitsTarget.fuel - (resourcesData.fuel.supply + resourcesData.fuel.unitsLeft) + 20), 0);
-            resourcesToBuy.fuel.amount = fuelUnitsToBuy;
-            resourcesToBuy.fuel.atlas = fuelPriceDetials.atlas * fuelUnitsToBuy;
-            resourcesToBuy.fuel.usdc = fuelPriceDetials.usdc * fuelUnitsToBuy;
+            const fuelUnitsToBuy = Math.max((unitsTarget.fuel - (resourcesData.fuel.supply + resourcesData.fuel.unitsLeft) + 20), 0);
+            _resourcesToBuy.fuel.amount = fuelUnitsToBuy;
+            _resourcesToBuy.fuel.atlas = fuelPriceDetials.atlas * fuelUnitsToBuy;
+            _resourcesToBuy.fuel.usdc = fuelPriceDetials.usdc * fuelUnitsToBuy;
 
 
             //? Tools
-            const toolsUnitsToBuy = Math.max(( unitsTarget.tools - (resourcesData.tools.supply + resourcesData.tools.unitsLeft) + 20), 0);
-            resourcesToBuy.tools.amount = toolsUnitsToBuy;
-            resourcesToBuy.tools.atlas = toolPriceDetials.atlas * toolsUnitsToBuy;
-            resourcesToBuy.tools.usdc = toolPriceDetials.usdc * toolsUnitsToBuy;
+            const toolsUnitsToBuy = Math.max((unitsTarget.tools - (resourcesData.tools.supply + resourcesData.tools.unitsLeft) + 20), 0);
+            _resourcesToBuy.tools.amount = toolsUnitsToBuy;
+            _resourcesToBuy.tools.atlas = toolPriceDetials.atlas * toolsUnitsToBuy;
+            _resourcesToBuy.tools.usdc = toolPriceDetials.usdc * toolsUnitsToBuy;
 
             //? Market
-            resourcesToBuy.market.rate = ammoPriceDetials.rate;
+            _resourcesToBuy.market.rate = ammoPriceDetials.rate;
         }
 
         // ! Urgent
@@ -290,39 +313,40 @@ export class FleetService {
 
             // ? how many units
             selectedFleets.forEach((fleet) => {
-                unitsTarget.food += (maxSeconds * fleet.resources.food.burnRate);
-                unitsTarget.ammo += (maxSeconds * fleet.resources.arms.burnRate);
-                unitsTarget.fuel += (maxSeconds * fleet.resources.fuel.burnRate);
-                unitsTarget.tools += (maxSeconds * fleet.resources.health.burnRate);
+                unitsTarget.food += (maxSeconds * fleet.resources.food.burnRatePerFleet);
+                unitsTarget.ammo += (maxSeconds * fleet.resources.arms.burnRatePerFleet);
+                unitsTarget.fuel += (maxSeconds * fleet.resources.fuel.burnRatePerFleet);
+                unitsTarget.tools += (maxSeconds * fleet.resources.health.burnRatePerFleet);
             });
+            console.log("unitsTarget.ammo --- A: ", unitsTarget.ammo)
 
             // ? food
-            const foodUnitsToBuy = Math.max(( unitsTarget.food - (resourcesData.food.supply + resourcesData.food.unitsLeft) + 20), 0);
-            resourcesToBuy.food.amount = foodUnitsToBuy;
-            resourcesToBuy.food.atlas = foodPriceDetials.atlas * foodUnitsToBuy;
-            resourcesToBuy.food.usdc = foodPriceDetials.usdc * foodUnitsToBuy;
+            const foodUnitsToBuy = Math.max((unitsTarget.food - (resourcesData.food.supply + resourcesData.food.unitsLeft) + 20), 0);
+            _resourcesToBuy.food.amount = foodUnitsToBuy;
+            _resourcesToBuy.food.atlas = foodPriceDetials.atlas * foodUnitsToBuy;
+            _resourcesToBuy.food.usdc = foodPriceDetials.usdc * foodUnitsToBuy;
 
             // ? ammo
-            const ammoUnitsToBuy = Math.max(( unitsTarget.ammo - (resourcesData.ammo.supply + resourcesData.ammo.unitsLeft) + 20), 0);
-            resourcesToBuy.ammo.amount = ammoUnitsToBuy;
-            resourcesToBuy.ammo.atlas = ammoPriceDetials.atlas * ammoUnitsToBuy;
-            resourcesToBuy.ammo.usdc = ammoPriceDetials.usdc * ammoUnitsToBuy;
+            const ammoUnitsToBuy = Math.max((unitsTarget.ammo - (resourcesData.ammo.supply + resourcesData.ammo.unitsLeft) + 20), 0);
+            _resourcesToBuy.ammo.amount = ammoUnitsToBuy;
+            _resourcesToBuy.ammo.atlas = ammoPriceDetials.atlas * ammoUnitsToBuy;
+            _resourcesToBuy.ammo.usdc = ammoPriceDetials.usdc * ammoUnitsToBuy;
 
             // ? fuel
-            const fuelUnitsToBuy = Math.max(( unitsTarget.fuel - (resourcesData.fuel.supply + resourcesData.fuel.unitsLeft) + 20), 0);
-            resourcesToBuy.fuel.amount = fuelUnitsToBuy;
-            resourcesToBuy.fuel.atlas = fuelPriceDetials.atlas * fuelUnitsToBuy;
-            resourcesToBuy.fuel.usdc = fuelPriceDetials.usdc * fuelUnitsToBuy;
+            const fuelUnitsToBuy = Math.max((unitsTarget.fuel - (resourcesData.fuel.supply + resourcesData.fuel.unitsLeft) + 20), 0);
+            _resourcesToBuy.fuel.amount = fuelUnitsToBuy;
+            _resourcesToBuy.fuel.atlas = fuelPriceDetials.atlas * fuelUnitsToBuy;
+            _resourcesToBuy.fuel.usdc = fuelPriceDetials.usdc * fuelUnitsToBuy;
 
 
             //? Tools
-            const toolsUnitsToBuy = Math.max(( unitsTarget.tools - (resourcesData.tools.supply + resourcesData.tools.unitsLeft) + 20), 0);
-            resourcesToBuy.tools.amount = toolsUnitsToBuy;
-            resourcesToBuy.tools.atlas = toolPriceDetials.atlas * toolsUnitsToBuy;
-            resourcesToBuy.tools.usdc = toolPriceDetials.usdc * toolsUnitsToBuy;
+            const toolsUnitsToBuy = Math.max((unitsTarget.tools - (resourcesData.tools.supply + resourcesData.tools.unitsLeft) + 20), 0);
+            _resourcesToBuy.tools.amount = toolsUnitsToBuy;
+            _resourcesToBuy.tools.atlas = toolPriceDetials.atlas * toolsUnitsToBuy;
+            _resourcesToBuy.tools.usdc = toolPriceDetials.usdc * toolsUnitsToBuy;
 
             //? Market
-            resourcesToBuy.market.rate = ammoPriceDetials.rate;
+            _resourcesToBuy.market.rate = ammoPriceDetials.rate;
         }
 
         // ! Critical
@@ -335,19 +359,19 @@ export class FleetService {
                         f.resources.fuel.secondsLeft,
                         f.resources.health.secondsLeft);
 
-                    if (f.resources.arms.secondsLeft > 0 && f.resources.arms.secondsLeft < min){
+                    if (f.resources.arms.secondsLeft > 0 && f.resources.arms.secondsLeft < min) {
                         min = f.resources.arms.secondsLeft;
                     }
 
-                    if (f.resources.food.secondsLeft > 0 && f.resources.food.secondsLeft < min){
+                    if (f.resources.food.secondsLeft > 0 && f.resources.food.secondsLeft < min) {
                         min = f.resources.food.secondsLeft;
                     }
 
-                    if (f.resources.fuel.secondsLeft > 0 && f.resources.fuel.secondsLeft < min){
+                    if (f.resources.fuel.secondsLeft > 0 && f.resources.fuel.secondsLeft < min) {
                         min = f.resources.fuel.secondsLeft;
                     }
 
-                    if (f.resources.health.secondsLeft > 0 && f.resources.health.secondsLeft < min){
+                    if (f.resources.health.secondsLeft > 0 && f.resources.health.secondsLeft < min) {
                         min = f.resources.health.secondsLeft;
                     }
 
@@ -363,46 +387,86 @@ export class FleetService {
 
             // ? how many units
             selectedFleets.forEach((fleet) => {
-                unitsTarget.food += (maxSeconds * fleet.resources.food.burnRate * fleet.shipQuantityInEscrow.toNumber());
-                unitsTarget.ammo += (maxSeconds * fleet.resources.arms.burnRate * fleet.shipQuantityInEscrow.toNumber());
-                unitsTarget.fuel += (maxSeconds * fleet.resources.fuel.burnRate * fleet.shipQuantityInEscrow.toNumber());
-                unitsTarget.tools += (maxSeconds * fleet.resources.health.burnRate * fleet.shipQuantityInEscrow.toNumber());
+                unitsTarget.food += (maxSeconds * fleet.resources.food.burnRatePerFleet);
+                unitsTarget.ammo += (maxSeconds * fleet.resources.arms.burnRatePerFleet);
+                unitsTarget.fuel += (maxSeconds * fleet.resources.fuel.burnRatePerFleet);
+                unitsTarget.tools += (maxSeconds * fleet.resources.health.burnRatePerFleet);
             });
 
             // ? food
-            const foodUnitsToBuy = Math.max(( unitsTarget.food - (resourcesData.food.supply + resourcesData.food.unitsLeft) + 20), 0);
-            resourcesToBuy.food.amount = foodUnitsToBuy;
-            resourcesToBuy.food.atlas = foodPriceDetials.atlas * foodUnitsToBuy;
-            resourcesToBuy.food.usdc = foodPriceDetials.usdc * foodUnitsToBuy;
+            const foodUnitsToBuy = Math.max((unitsTarget.food - (resourcesData.food.supply + resourcesData.food.unitsLeft) + 20), 0);
+            _resourcesToBuy.food.amount = foodUnitsToBuy;
+            _resourcesToBuy.food.atlas = foodPriceDetials.atlas * foodUnitsToBuy;
+            _resourcesToBuy.food.usdc = foodPriceDetials.usdc * foodUnitsToBuy;
 
             // ? ammo
-            const ammoUnitsToBuy = Math.max(( unitsTarget.ammo - (resourcesData.ammo.supply + resourcesData.ammo.unitsLeft) + 20), 0);
-            resourcesToBuy.ammo.amount = ammoUnitsToBuy;
-            resourcesToBuy.ammo.atlas = ammoPriceDetials.atlas * ammoUnitsToBuy;
-            resourcesToBuy.ammo.usdc = ammoPriceDetials.usdc * ammoUnitsToBuy;
+            const ammoUnitsToBuy = Math.max((unitsTarget.ammo - (resourcesData.ammo.supply + resourcesData.ammo.unitsLeft) + 20), 0);
+            _resourcesToBuy.ammo.amount = ammoUnitsToBuy;
+            _resourcesToBuy.ammo.atlas = ammoPriceDetials.atlas * ammoUnitsToBuy;
+            _resourcesToBuy.ammo.usdc = ammoPriceDetials.usdc * ammoUnitsToBuy;
 
             // ? fuel
-            const fuelUnitsToBuy = Math.max(( unitsTarget.fuel - (resourcesData.fuel.supply + resourcesData.fuel.unitsLeft) + 20), 0);
-            resourcesToBuy.fuel.amount = fuelUnitsToBuy;
-            resourcesToBuy.fuel.atlas = fuelPriceDetials.atlas * fuelUnitsToBuy;
-            resourcesToBuy.fuel.usdc = fuelPriceDetials.usdc * fuelUnitsToBuy;
+            const fuelUnitsToBuy = Math.max((unitsTarget.fuel - (resourcesData.fuel.supply + resourcesData.fuel.unitsLeft) + 20), 0);
+            _resourcesToBuy.fuel.amount = fuelUnitsToBuy;
+            _resourcesToBuy.fuel.atlas = fuelPriceDetials.atlas * fuelUnitsToBuy;
+            _resourcesToBuy.fuel.usdc = fuelPriceDetials.usdc * fuelUnitsToBuy;
 
 
             //? Tools
-            const toolsUnitsToBuy = Math.max(( unitsTarget.tools - (resourcesData.tools.supply + resourcesData.tools.unitsLeft) + 20), 0);
-            resourcesToBuy.tools.amount = toolsUnitsToBuy;
-            resourcesToBuy.tools.atlas = toolPriceDetials.atlas * toolsUnitsToBuy;
-            resourcesToBuy.tools.usdc = toolPriceDetials.usdc * toolsUnitsToBuy;
+            const toolsUnitsToBuy = Math.max((unitsTarget.tools - (resourcesData.tools.supply + resourcesData.tools.unitsLeft) + 20), 0);
+            _resourcesToBuy.tools.amount = toolsUnitsToBuy;
+            _resourcesToBuy.tools.atlas = toolPriceDetials.atlas * toolsUnitsToBuy;
+            _resourcesToBuy.tools.usdc = toolPriceDetials.usdc * toolsUnitsToBuy;
 
             //? Market
-            resourcesToBuy.market.rate = ammoPriceDetials.rate;
+            _resourcesToBuy.market.rate = ammoPriceDetials.rate;
         }
 
-        return resourcesToBuy;
+        // ! Custom
+        if (mode == BUY_SUPPLY_MODES.CUSTOM) {
+
+            const unitsTarget = {
+                food: resourcesToBuy!.food.amount,
+                ammo: resourcesToBuy!.ammo.amount,
+                fuel: resourcesToBuy!.fuel.amount,
+                tools: resourcesToBuy!.tools.amount
+            }
+
+
+            // ? food
+            const foodUnitsToBuy = unitsTarget.food;
+            _resourcesToBuy.food.amount = foodUnitsToBuy;
+            _resourcesToBuy.food.atlas = foodPriceDetials.atlas * foodUnitsToBuy;
+            _resourcesToBuy.food.usdc = foodPriceDetials.usdc * foodUnitsToBuy;
+
+            // ? ammo
+            const ammoUnitsToBuy = unitsTarget.ammo;
+            _resourcesToBuy.ammo.amount = ammoUnitsToBuy;
+            _resourcesToBuy.ammo.atlas = ammoPriceDetials.atlas * ammoUnitsToBuy;
+            _resourcesToBuy.ammo.usdc = ammoPriceDetials.usdc * ammoUnitsToBuy;
+
+            // ? fuel
+            const fuelUnitsToBuy = unitsTarget.fuel;
+            _resourcesToBuy.fuel.amount = fuelUnitsToBuy;
+            _resourcesToBuy.fuel.atlas = fuelPriceDetials.atlas * fuelUnitsToBuy;
+            _resourcesToBuy.fuel.usdc = fuelPriceDetials.usdc * fuelUnitsToBuy;
+
+
+            //? Tools
+            const toolsUnitsToBuy = unitsTarget.tools;
+            _resourcesToBuy.tools.amount = toolsUnitsToBuy;
+            _resourcesToBuy.tools.atlas = toolPriceDetials.atlas * toolsUnitsToBuy;
+            _resourcesToBuy.tools.usdc = toolPriceDetials.usdc * toolsUnitsToBuy;
+
+            //? Market
+            _resourcesToBuy.market.rate = ammoPriceDetials.rate;
+        }
+
+        return _resourcesToBuy;
 
     }
 
-    public static calculateResources(selectedFleets: IFleet[], inventory: IInventory | undefined) : { [key: string]: IResourceData; } {
+    public static calculateResources(selectedFleets: IFleet[], inventory: IInventory | undefined): { [key: string]: IResourceData; } {
 
         const resourcesData: { [key: string]: IResourceData } = {
             ammo: {
@@ -479,7 +543,7 @@ export class FleetService {
             },
         };
 
-        if(!inventory) {
+        if (!inventory) {
             return resourcesData;
         }
 
@@ -496,7 +560,7 @@ export class FleetService {
             if (fleet.resources.arms.unitsLeft > 0 && fleet.resources.arms.secondsLeft > 0 && resourcesData.ammo["pct1Color"] != COLORS.THICK_RED) {
                 resourcesData.ammo["pct1Color"] = COLORS.THICK_BLUE;
             }
-            if (fleet.resources.arms.unitsLeft == 0 ||  fleet.resources.arms.secondsLeft == 0) {
+            if (fleet.resources.arms.unitsLeft == 0 || fleet.resources.arms.secondsLeft == 0) {
                 resourcesData.ammo["pct1Color"] = COLORS.THICK_RED;
                 resourcesData.ammo["isBlinking"] = true;
             }
@@ -537,7 +601,7 @@ export class FleetService {
                 resourcesData.fuel["pct1Color"] = COLORS.THICK_RED;
                 resourcesData.fuel["isBlinking"] = true;
             }
-            if (getHours(fleet.resources.fuel.secondsLeft) < 12 && resourcesData.fuel["pct1Color"] != COLORS.THICK_RED ) {
+            if (getHours(fleet.resources.fuel.secondsLeft) < 12 && resourcesData.fuel["pct1Color"] != COLORS.THICK_RED) {
                 resourcesData.fuel["pct1Color"] = COLORS.THICK_YELLOW;
             }
 
@@ -567,10 +631,10 @@ export class FleetService {
         resourcesData.tools.pct1 = Math.min(resourcesData.tools.unitsLeft / resourcesData.tools.maxUnits, 1) || 0;
 
         if (inventory) {
-            resourcesData.ammo.pct2 = inventory.supplies.arms - resourcesData.ammo.unitsNeedToMax >= 0  ? 0 : Math.abs(inventory.supplies.arms - resourcesData.ammo.unitsNeedToMax) / resourcesData.ammo.maxUnits;
-            resourcesData.food.pct2 = inventory.supplies.food - resourcesData.food.unitsNeedToMax >= 0  ? 0 : Math.abs(inventory.supplies.food - resourcesData.food.unitsNeedToMax) / resourcesData.food.maxUnits;
-            resourcesData.fuel.pct2 = inventory.supplies.fuel - resourcesData.fuel.unitsNeedToMax >= 0  ? 0 : Math.abs(inventory.supplies.fuel - resourcesData.fuel.unitsNeedToMax) / resourcesData.fuel.maxUnits;
-            resourcesData.tools.pct2 = inventory.supplies.tools - resourcesData.tools.unitsNeedToMax >= 0  ? 0 : Math.abs(inventory.supplies.tools - resourcesData.tools.unitsNeedToMax) / resourcesData.tools.maxUnits;
+            resourcesData.ammo.pct2 = inventory.supplies.arms - resourcesData.ammo.unitsNeedToMax >= 0 ? 0 : Math.abs(inventory.supplies.arms - resourcesData.ammo.unitsNeedToMax) / resourcesData.ammo.maxUnits;
+            resourcesData.food.pct2 = inventory.supplies.food - resourcesData.food.unitsNeedToMax >= 0 ? 0 : Math.abs(inventory.supplies.food - resourcesData.food.unitsNeedToMax) / resourcesData.food.maxUnits;
+            resourcesData.fuel.pct2 = inventory.supplies.fuel - resourcesData.fuel.unitsNeedToMax >= 0 ? 0 : Math.abs(inventory.supplies.fuel - resourcesData.fuel.unitsNeedToMax) / resourcesData.fuel.maxUnits;
+            resourcesData.tools.pct2 = inventory.supplies.tools - resourcesData.tools.unitsNeedToMax >= 0 ? 0 : Math.abs(inventory.supplies.tools - resourcesData.tools.unitsNeedToMax) / resourcesData.tools.maxUnits;
 
             resourcesData.ammo.untisNeedToBuy = Math.max(0, resourcesData.ammo.unitsNeedToMax - inventory.supplies.arms);
             resourcesData.food.untisNeedToBuy = Math.max(0, resourcesData.food.unitsNeedToMax - inventory.supplies.food);
@@ -588,16 +652,16 @@ export class FleetService {
 
     }
 
-    public static getPendingAtlas()  {
+    public static getPendingAtlas() {
 
         return useFleetStore.getState().fleets.reduce((sum, fleet) => {
             return sum + fleet.pendingRewardsV2;
-        } ,0)
+        }, 0)
     }
 
     public static async checkSignatures(signatures: WaitingSignature[]) {
 
-        let _signatures = signatures.map( sig => ({...sig}))
+        let _signatures = signatures.map(sig => ({...sig}))
         let count = 20;
         while (1) {
             try {
@@ -611,7 +675,7 @@ export class FleetService {
                         retryAsync(async () => {
                             return {
                                 hash: sig.hash,
-                                status:  (await CONN.getSignatureStatus(sig.hash)).value?.confirmationStatus ||  "processing"
+                                status: (await CONN.getSignatureStatus(sig.hash)).value?.confirmationStatus || "processing"
                             };
                         })
                     )
@@ -635,10 +699,13 @@ export class FleetService {
                 if (isDone) {
                     return true
                 } else {
-                    count --;
+                    count--;
                     if (count == 0) {
                         useAppStore.getState().setSignaturesToWait(
-                            _signatures.map(sig => ({...sig, status: sig.status != 'finalized' ? 'unknown': 'finalized'})) as WaitingSignature[]
+                            _signatures.map(sig => ({
+                                ...sig,
+                                status: sig.status != 'finalized' ? 'unknown' : 'finalized'
+                            })) as WaitingSignature[]
                         )
                         return false
                     }
@@ -651,10 +718,10 @@ export class FleetService {
         }
     }
 
-    public static findWhoDeplateFirst(fleets:IFleet[]) :  Partial<IFleet>  {
+    public static findWhoDeplateFirst(fleets: IFleet[]): Partial<IFleet> {
 
         if (fleets.length == 0) {
-            return  {
+            return {
                 stats: {
                     ammo: {
                         imgSrc: ammoImg,
@@ -756,10 +823,10 @@ export class FleetService {
         return minFleet;
     }
 
-    public static findWhoDeplateLast(fleets:IFleet[]) :  Partial<IFleet>  {
+    public static findWhoDeplateLast(fleets: IFleet[]): Partial<IFleet> {
 
         if (fleets.length == 0) {
-            return  {
+            return {
                 stats: {
                     ammo: {
                         imgSrc: ammoImg,
@@ -861,6 +928,82 @@ export class FleetService {
         return maxFleet;
     }
 
+    public static getResourcesRequiredFor(seconds: number, resourcesData: { [key: string]: IResourceData; }) {
+
+        const resourcesToBuy: InvoiceResources = {
+            ammo: {
+                amount: 0,
+                atlas: 0,
+                usdc: 0,
+            },
+            food: {
+                amount: 0,
+                atlas: 0,
+                usdc: 0,
+            },
+            fuel: {
+                amount: 0,
+                atlas: 0,
+                usdc: 0,
+            },
+            tools: {
+                amount: 0,
+                atlas: 0,
+                usdc: 0,
+            },
+            market: {
+                rate: 0,
+            },
+        };
+
+        const {selectedFleets, inventory, fleets} = useFleetStore.getState();
+        let fleetsToResupply = selectedFleets;
+
+        if (selectedFleets.length == 0) {
+            fleetsToResupply = fleets
+        }
+        const maxSeconds = seconds;
+
+
+        const unitsTarget = {
+            food: 0,
+            ammo: 0,
+            fuel: 0,
+            tools: 0
+        }
+
+
+
+        // ? how many units
+        fleetsToResupply.forEach((fleet) => {
+            unitsTarget.food += (maxSeconds * fleet.resources.food.burnRatePerFleet);
+            unitsTarget.ammo += (maxSeconds * fleet.resources.arms.burnRatePerFleet);
+            unitsTarget.fuel += (maxSeconds * fleet.resources.fuel.burnRatePerFleet);
+            unitsTarget.tools += (maxSeconds * fleet.resources.health.burnRatePerFleet);
+            console.log(`Fleet ${fleet.name} -- maxUnits ${fleet.resources.health.maxUnits} -- time required to burn max units ${fleet.resources.health.maxUnits / fleet.resources.health.burnRatePerShip} -- maxSeconds ${fleet.resources.health.maxSeconds}`)
+            console.log(`Fleet ${fleet.name} -- need for ${maxSeconds/60/60/24} days -- ${maxSeconds * fleet.resources.health.burnRatePerShip} tools`);
+            console.log(`Fleet ${fleet.name} -- `, fleet.resources)
+            console.log(`********************* \n`)
+        });
+
+
+        console.log("unitsTarget.ammo:", unitsTarget.ammo)
+        console.log("resourcesData.ammo.supply:", resourcesData.ammo.supply)
+
+        // ? food
+        resourcesToBuy.food.amount = Math.max((unitsTarget.food - (resourcesData.food.supply) + 20), 0);
+
+        // ? ammo
+        resourcesToBuy.ammo.amount = Math.max((unitsTarget.ammo - (resourcesData.ammo.supply) + 20), 0);
+
+        // ? fuel
+        resourcesToBuy.fuel.amount = Math.max((unitsTarget.fuel - (resourcesData.fuel.supply) + 20), 0);
+
+        //? Tools
+        resourcesToBuy.tools.amount = Math.max((unitsTarget.tools - (resourcesData.tools.supply) + 20), 0);
+
+        return resourcesToBuy;
+    }
 
 // ! PRIVATE =======================
     public static async checkSignature(signature: WaitingSignature) {
@@ -868,10 +1011,11 @@ export class FleetService {
 
     }
 
-    private static getRemainFoodDetails(shipInfo: ScoreVarsShipInfo, fleet: ShipStakingInfo, timePassSinceStart: number) : ResourceRemaining {
+    private static getRemainFoodDetails(shipInfo: ScoreVarsShipInfo, fleet: ShipStakingInfo, timePassSinceStart: number): ResourceRemaining {
 
         const secondsLeft = FleetService.getRemainFoodSec(fleet, timePassSinceStart);
         const unitsBurnRate = 1 / (shipInfo.millisecondsToBurnOneFood / 1000); // Per Second
+        const burnRatePerFleet =  1 / ((shipInfo.millisecondsToBurnOneFood / fleet.shipQuantityInEscrow.toNumber()) / 1000)
         const unitsBurnt = unitsBurnRate * timePassSinceStart * fleet.shipQuantityInEscrow.toNumber();
         const unitsLeft = unitsBurnRate * secondsLeft * fleet.shipQuantityInEscrow.toNumber();
         const unitsLeftPct = unitsLeft / (shipInfo.foodMaxReserve * fleet.shipQuantityInEscrow.toNumber());
@@ -887,16 +1031,18 @@ export class FleetService {
             totalSeconds,
             maxSeconds,
             maxUnits,
-            burnRate: unitsBurnRate
+            burnRatePerShip: unitsBurnRate,
+            burnRatePerFleet: burnRatePerFleet
         };
 
     }
 
-    private static getRemainArmsDetails(shipInfo: ScoreVarsShipInfo, fleet: ShipStakingInfo, timePassSinceStart: number) : ResourceRemaining {
+    private static getRemainArmsDetails(shipInfo: ScoreVarsShipInfo, fleet: ShipStakingInfo, timePassSinceStart: number): ResourceRemaining {
 
         const secondsLeft = FleetService.getRemainArmsSec(fleet, timePassSinceStart);
         const unitsBurnRate = 1 / (shipInfo.millisecondsToBurnOneArms / 1000); // Per Second
         const unitsBurnt = unitsBurnRate * timePassSinceStart * fleet.shipQuantityInEscrow.toNumber();
+        const burnRatePerFleet =  1 / ((shipInfo.millisecondsToBurnOneArms / 1000) / fleet.shipQuantityInEscrow.toNumber())
         const unitsLeft = unitsBurnRate * secondsLeft * fleet.shipQuantityInEscrow.toNumber();
         const unitsLeftPct = unitsLeft / (shipInfo.armsMaxReserve * fleet.shipQuantityInEscrow.toNumber());
         const maxSeconds = shipInfo.armsMaxReserve * fleet.shipQuantityInEscrow.toNumber() * (shipInfo.millisecondsToBurnOneArms / 1000 / fleet.shipQuantityInEscrow.toNumber());
@@ -912,16 +1058,18 @@ export class FleetService {
             totalSeconds,
             maxSeconds,
             maxUnits,
-            burnRate: unitsBurnRate
+            burnRatePerShip: unitsBurnRate,
+            burnRatePerFleet: burnRatePerFleet
         };
 
     }
 
-    private static getRemainFuelDetails(shipInfo: ScoreVarsShipInfo, fleet: ShipStakingInfo, timePassSinceStart: number) : ResourceRemaining {
+    private static getRemainFuelDetails(shipInfo: ScoreVarsShipInfo, fleet: ShipStakingInfo, timePassSinceStart: number): ResourceRemaining {
 
         const secondsLeft = FleetService.getRemainFuelSec(fleet, timePassSinceStart);
         const unitsBurnRate = 1 / (shipInfo.millisecondsToBurnOneFuel / 1000); // Per Second
         const unitsBurnt = unitsBurnRate * timePassSinceStart * fleet.shipQuantityInEscrow.toNumber();
+        const burnRatePerFleet =  1 / ((shipInfo.millisecondsToBurnOneFuel / fleet.shipQuantityInEscrow.toNumber()) / 1000)
         const unitsLeft = unitsBurnRate * secondsLeft * fleet.shipQuantityInEscrow.toNumber();
         const unitsLeftPct = unitsLeft / (shipInfo.fuelMaxReserve * fleet.shipQuantityInEscrow.toNumber());
         const totalSeconds = fleet.fuelCurrentCapacity.toNumber();
@@ -936,16 +1084,18 @@ export class FleetService {
             totalSeconds,
             maxSeconds,
             maxUnits,
-            burnRate: unitsBurnRate
+            burnRatePerShip: unitsBurnRate,
+            burnRatePerFleet: burnRatePerFleet
         };
 
     }
 
-    private static getRemainHealthDetails(shipInfo: ScoreVarsShipInfo, fleet: ShipStakingInfo, timePassSinceStart: number) : ResourceRemaining {
+    private static getRemainHealthDetails(shipInfo: ScoreVarsShipInfo, fleet: ShipStakingInfo, timePassSinceStart: number): ResourceRemaining {
 
         const unitsLeftPct = (fleet.healthCurrentCapacity.toNumber() - timePassSinceStart) / fleet.healthCurrentCapacity.toNumber();
         const secondsLeft = FleetService.getRemainHealthSec(fleet, timePassSinceStart);
         const unitsBurnRate = 1 / (shipInfo.millisecondsToBurnOneToolkit / 1000);
+        const burnRatePerFleet =  1 / ((shipInfo.millisecondsToBurnOneToolkit / fleet.shipQuantityInEscrow.toNumber()) / 1000)
         const unitsLeft = secondsLeft / (shipInfo.millisecondsToBurnOneToolkit / 1000 / fleet.shipQuantityInEscrow.toNumber());
         const totalSeconds = fleet.healthCurrentCapacity.toNumber();
         const maxSeconds = shipInfo.toolkitMaxReserve * fleet.shipQuantityInEscrow.toNumber() * (shipInfo.millisecondsToBurnOneToolkit / 1000 / fleet.shipQuantityInEscrow.toNumber());
@@ -959,12 +1109,13 @@ export class FleetService {
             maxSeconds,
             maxUnits,
             unitsLeft: unitsLeft,
-            burnRate: unitsBurnRate
+            burnRatePerShip: unitsBurnRate,
+            burnRatePerFleet: burnRatePerFleet
         };
 
     }
 
-    private static getRemainFoodSec(fleet: ShipStakingInfo, _timePass: number | undefined = undefined) : number {
+    private static getRemainFoodSec(fleet: ShipStakingInfo, _timePass: number | undefined = undefined): number {
 
         let timePass = _timePass != undefined ? _timePass : FleetService.getTimePass(fleet);
         let remainTime = fleet.foodCurrentCapacity.toNumber() - timePass;
@@ -974,7 +1125,7 @@ export class FleetService {
 
     }
 
-    private static getRemainArmsSec(fleet: ShipStakingInfo, _timePass: number | undefined = undefined) : number {
+    private static getRemainArmsSec(fleet: ShipStakingInfo, _timePass: number | undefined = undefined): number {
 
         let timePass = _timePass != undefined ? _timePass : FleetService.getTimePass(fleet);
         let remainTime = fleet.armsCurrentCapacity.toNumber() - timePass;
@@ -983,7 +1134,7 @@ export class FleetService {
 
     }
 
-    private static getRemainFuelSec(fleet: ShipStakingInfo, _timePass: number | undefined = undefined) : number {
+    private static getRemainFuelSec(fleet: ShipStakingInfo, _timePass: number | undefined = undefined): number {
 
         let timePass = _timePass != undefined ? _timePass : FleetService.getTimePass(fleet);
         let remainTime = fleet.fuelCurrentCapacity.toNumber() - timePass;
@@ -992,7 +1143,7 @@ export class FleetService {
 
     }
 
-    private static getRemainHealthSec(fleet: ShipStakingInfo, _timePass: number | undefined = undefined) : number {
+    private static getRemainHealthSec(fleet: ShipStakingInfo, _timePass: number | undefined = undefined): number {
 
         let timePass = _timePass != undefined ? _timePass : FleetService.getTimePass(fleet);
         let remainTime = fleet.healthCurrentCapacity.toNumber() - timePass;
@@ -1001,7 +1152,7 @@ export class FleetService {
 
     }
 
-    private static getTimePass(fleet: ShipStakingInfo) : number {
+    private static getTimePass(fleet: ShipStakingInfo): number {
         const now = Date.now() / 1000;
         const tripStart = fleet.currentCapacityTimestamp.toNumber();
         const timePass = now - tripStart;
@@ -1031,7 +1182,7 @@ export class FleetService {
         return timePassSinceStart;
     }
 
-    private static async getTokenAmmount(token: Token, pubKey: PublicKey) : Promise<number> {
+    private static async getTokenAmmount(token: Token, pubKey: PublicKey): Promise<number> {
 
         try {
             return (
@@ -1047,7 +1198,7 @@ export class FleetService {
 
     }
 
-    private static getReward ( shipInfo:ScoreVarsShipInfo ,fleet: ShipStakingInfo) : number {
+    private static getReward(shipInfo: ScoreVarsShipInfo, fleet: ShipStakingInfo): number {
         let timePass = FleetService.getTimePass(fleet);
         let pendingReward = Number(fleet.shipQuantityInEscrow) * (Number(fleet.totalTimeStaked) - Number(fleet.stakedTimePaid) + timePass) * Number(shipInfo.rewardRatePerSecond);
         return pendingReward

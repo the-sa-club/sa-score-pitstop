@@ -1,6 +1,6 @@
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import styled from "styled-components";
-import { PALLETE } from "../constants";
+import { PALETTE } from "../constants";
 import { Align } from "./shared/styled/Styled";
 
 export const Starter = () => {
@@ -85,7 +85,7 @@ const Logo = styled.div`
   b {
     font-size: 2rem;
     font-family: "nasalization";
-    color: ${PALLETE.FONT_COLOR};
+    color: ${PALETTE.FONT_COLOR};
   }
   svg {
     margin-right: 8px;
@@ -93,8 +93,8 @@ const Logo = styled.div`
 `;
 
 const VersionIndicator = styled.b`
-  font-size: ${PALLETE.FONT_SM} !important;
+  font-size: ${PALETTE.FONT_SM} !important;
   font-family: "nasalization";
   margin: 20px 16px;
-  color: ${PALLETE.FONT_COLOR};
+  color: ${PALETTE.FONT_COLOR};
 `;

@@ -54,7 +54,8 @@ export interface ResourceRemaining {
   totalSeconds: number;
   maxSeconds: number;
   maxUnits: number;
-  burnRate: number;
+  burnRatePerShip: number;
+  burnRatePerFleet: number;
 }
 
 export type SetType<T extends object> = <

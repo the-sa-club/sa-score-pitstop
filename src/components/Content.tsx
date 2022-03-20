@@ -3,7 +3,7 @@ import { Transaction } from "@solana/web3.js";
 import * as React from "react";
 import styled from "styled-components";
 import shallow from "zustand/shallow";
-import { ATLAS_DECIMAL, CONN, PALLETE } from "../constants";
+import { ATLAS_DECIMAL, CONN, PALETTE } from "../constants";
 import { useAppStore, useFleetStore } from "../data/store";
 import {
   ErrorModalTypes,
@@ -144,7 +144,7 @@ const ContentWrapper = styled.div`
   justify-content: space-between;
   padding: 16px 0;
 
-  @media ${PALLETE.DEVICE.mobileL} {
+  @media ${PALETTE.DEVICE.mobileL} {
     flex-direction: column;
     justify-content: space-between;
   }
@@ -154,24 +154,24 @@ const PrimaryBtn = styled.button`
   padding: 8px 16px;
   border-radius: 4px;
   height: 34px;
-  background-color: ${PALLETE.CLUB_RED};
-  color: ${PALLETE.FONT_COLOR};
+  background-color: ${PALETTE.CLUB_RED};
+  color: ${PALETTE.FONT_COLOR};
   cursor: pointer;
   &:active {
-    background-color: ${PALLETE.CLUB_RED_HOVER};
+    background-color: ${PALETTE.CLUB_RED_HOVER};
   }
 `;
 
 const ResourcesSection = styled.div`
-  color: ${PALLETE.FONT_COLOR};
+  color: ${PALETTE.FONT_COLOR};
   flex: 5;
   border-radius: 4px;
-  background-color: ${PALLETE.PRIMARY_BG_COLOR};
+  background-color: ${PALETTE.PRIMARY_BG_COLOR};
   padding: 32px 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  @media ${PALLETE.DEVICE.mobileL} {
+  @media ${PALETTE.DEVICE.mobileL} {
     flex-direction: column;
     justify-content: space-between;
     margin: 16px 8px;
@@ -183,17 +183,17 @@ const Title = styled.h1<{ align?: string }>`
 `;
 
 const PendingSection = styled.div`
-  color: ${PALLETE.FONT_COLOR};
+  color: ${PALETTE.FONT_COLOR};
   flex: 2;
   border-radius: 4px;
-  background-color: ${PALLETE.PRIMARY_BG_COLOR};
+  background-color: ${PALETTE.PRIMARY_BG_COLOR};
   padding: 32px 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-align: center;
 
-  @media ${PALLETE.DEVICE.mobileL} {
+  @media ${PALETTE.DEVICE.mobileL} {
     flex-direction: column;
     justify-content: space-between;
     margin: 16px 8px;

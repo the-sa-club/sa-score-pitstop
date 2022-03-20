@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { BUY_SUPPLY_MODES, PALLETE } from "../constants";
+import { BUY_SUPPLY_MODES, PALETTE } from "../constants";
 import { ReactComponent as InfoIcon } from "../assets/images/info.svg";
 import TooltipWrapper from "./shared/TooltipWrapper";
 import { MarketService } from "../services/marketService";
@@ -39,10 +39,10 @@ const Wrapper = styled.div`
   justify-content: space-between;
   padding: 8px 8px;
   width: 100%;
-  font-size: ${PALLETE.FONT_SM};
+  font-size: ${PALETTE.FONT_SM};
   align-items: center;
   cursor: pointer;
   &:hover {
-    background-color: ${PALLETE.CLUB_RED_HOVER};
+    background-color: ${PALETTE.CLUB_RED_HOVER};
   }
 `;

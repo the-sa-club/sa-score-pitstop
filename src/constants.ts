@@ -12,7 +12,7 @@ export const COLORS = {
   THICK_GREY: "#c5c3c3",
 };
 
-export const CONN = new Connection("https://solana--mainnet.datahub.figment.io/apikey/a273d5bc3ab79337e4c0dafc0c45d6df");
+export const CONN = new Connection(process.env.REACT_APP_CONN_API!);
 export const FLEET_PROGRAM = new PublicKey(
   "FLEET1qqzpexyaDpqb2DGsSzE2sDCizewCg9WjrA6DBW"
 );
@@ -30,7 +30,7 @@ export const ATLAS_MINT = new PublicKey(
   "ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx"
 );
 
-export const PALLETE = {
+export const PALETTE = {
   SECONDARY_BG_COLOR: "#252525",
   FONT_COLOR_SIGN: "#4b4b4b",
   PRIMARY_BG_COLOR: "#080808c2",
@@ -47,8 +47,8 @@ export const PALLETE = {
     mobileS: `(max-width: 320px)`,
     mobileM: `(max-width: 375px)`,
     mobileL: `(max-width: 768px)`,
-    laptop: `(max-width: 1024px)`,
-    laptopL: `(max-width: 1440px)`,
+    laptop: `(min-width: 1024px)`,
+    laptopL: `(min-width: 1440px)`,
     desktop: `(min-width: 2560px)`,
   }
 };
@@ -58,6 +58,7 @@ export enum BUY_SUPPLY_MODES {
   OPTIMAL = "OPTIMAL SUPPLY",
   URGENT = "URGENT ONLY SUPPLY",
   CRITICAL = "CRITICAL SUPPLY",
+  CUSTOM = "CUSTOM"
   // NONE = "NONE",
 }
 

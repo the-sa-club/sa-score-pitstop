@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { BUY_SUPPLY_MODES, PALLETE } from "../constants";
+import { BUY_SUPPLY_MODES, PALETTE } from "../constants";
 import { Button } from "./shared/Button";
 
 interface Props {
@@ -83,7 +83,7 @@ const MainButton = styled(Button)`
   justify-content: space-between;
   width: 100%;
   &.unactive:active {
-    background-color: ${PALLETE.CLUB_RED};
+    background-color: ${PALETTE.CLUB_RED};
   }
 `;
 
@@ -92,7 +92,7 @@ const IconButton = styled(Button)`
   padding: 5px 16px;
   border-radius: 0 4px 4px 0;
   &.unactive:active {
-    background-color: ${PALLETE.CLUB_RED};
+    background-color: ${PALETTE.CLUB_RED};
   }
 `;
 
@@ -102,8 +102,8 @@ const ListWraper = styled.div`
   top: 105%;
   left: 0;
   right: 0;
-  height: 139px;
-  background-color: ${PALLETE.CLUB_RED_DENSE};
+  height: 175px;
+  background-color: ${PALETTE.CLUB_RED_DENSE};
   border-radius: 4px;
   display: flex;
   flex-direction: column;

@@ -32,9 +32,12 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
-
+.env
+.nginx
+.build
 # vercel
 .vercel
+.idea
 
 # typescript
 *.tsbuildinfo

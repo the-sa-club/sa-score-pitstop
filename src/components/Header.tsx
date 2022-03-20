@@ -7,7 +7,7 @@ import { MarketService } from "../services/marketService";
 import { AtlasIcon } from "./Atlas";
 import shallow from "zustand/shallow";
 import { Container } from "./shared/styled/Styled";
-import { ATLAS_DECIMAL, PALLETE, RESOURCE_DECIMAL } from "../constants";
+import { ATLAS_DECIMAL, PALETTE, RESOURCE_DECIMAL } from "../constants";
 import { thousandsFormatter } from "../utils";
 import ammoImg from "../assets/images/ammo.png";
 import foodImg from "../assets/images/food.png";
@@ -309,16 +309,16 @@ const Wrapper = styled.div`
   width: 100%;
   min-height: 75px;
   padding: 8px;
-  background-color: ${PALLETE.SECONDARY_BG_COLOR};
+  background-color: ${PALETTE.SECONDARY_BG_COLOR};
   border-radius: 0 0 4px 4px;
 `;
 
 const WalletBtnWrapper = styled.div`
-  @media ${PALLETE.DEVICE.mobileL} {
+  @media ${PALETTE.DEVICE.mobileL} {
     button {
       height: 30px;
       width: 120px;
-      font-size: ${PALLETE.FONT_SM};
+      font-size: ${PALETTE.FONT_SM};
       padding: 0;
       display: flex;
       justify-content: center;
@@ -337,7 +337,7 @@ const Menu = styled.div`
   justify-content: flex-end;
   align-items: center;
   height: 100%;
-  @media ${PALLETE.DEVICE.mobileL} {
+  @media ${PALETTE.DEVICE.mobileL} {
     flex-direction: column-reverse;
     justify-content: center;
     align-items: center;
@@ -345,8 +345,8 @@ const Menu = styled.div`
 `;
 
 const Title = styled.b`
-  @media ${PALLETE.DEVICE.mobileL} {
-    font-size: ${PALLETE.FONT_MD} !important;
+  @media ${PALETTE.DEVICE.mobileL} {
+    font-size: ${PALETTE.FONT_MD} !important;
   }
 `;
 
@@ -366,7 +366,7 @@ const Logo = styled.div`
   b {
     font-size: 2rem;
     font-family: "nasalization";
-    color: ${PALLETE.FONT_COLOR};
+    color: ${PALETTE.FONT_COLOR};
   }
   svg {
     margin-right: 8px;
@@ -376,7 +376,7 @@ const Logo = styled.div`
 const Stats = styled.div`
   margin-right: 1rem;
   height: 60%;
-  color: ${PALLETE.FONT_COLOR};
+  color: ${PALETTE.FONT_COLOR};
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -387,14 +387,14 @@ const Stats = styled.div`
     padding: 4px;
   }
 
-  @media ${PALLETE.DEVICE.mobileL} {
+  @media ${PALETTE.DEVICE.mobileL} {
     display: none;
   }
 `;
 
 const StatsMobile = styled(Stats)`
   display: none;
-  @media ${PALLETE.DEVICE.mobileL} {
+  @media ${PALETTE.DEVICE.mobileL} {
     margin-right: 0;
     padding: 20px 0;
     display: flex;

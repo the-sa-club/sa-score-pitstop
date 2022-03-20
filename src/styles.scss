@@ -20,6 +20,8 @@ html {
   background: $primary-bg-color;
   width: 100%;
   font-size: 14.5px;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 body {
   min-height: 100vh;

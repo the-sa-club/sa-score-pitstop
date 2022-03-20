@@ -1,6 +1,8 @@
 # stage1 as builder
 FROM node:14.16.1-alpine as builder
 
+ARG CONN_API
+
 # copy the package.json to install dependencies
 COPY package.json package-lock.json ./
 
@@ -15,7 +17,7 @@ WORKDIR /react-ui
 COPY . .
 
 # Build the project and copy the files
-RUN npm run build
+RUN REACT_APP_CONN_API=${CONN_API} npm run build
 
 
 FROM nginx:alpine

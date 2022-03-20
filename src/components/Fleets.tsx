@@ -2,7 +2,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import * as React from "react";
 import styled from "styled-components";
 import shallow from "zustand/shallow";
-import { PALLETE } from "../constants";
+import { PALETTE } from "../constants";
 import { useAppStore, useFleetStore, useResourceStore } from "../data/store";
 import { IFleet } from "../data/types";
 import { FleetService } from "../services/fleetService";
@@ -101,9 +101,9 @@ const FleetWrapper = styled.div`
   justify-content: space-between;
   flex-wrap: wrap;
   padding: 32px 16px;
-  color: ${PALLETE.FONT_COLOR};
+  color: ${PALETTE.FONT_COLOR};
   border-radius: 4px;
-  background-color: ${PALLETE.PRIMARY_BG_COLOR};
+  background-color: ${PALETTE.PRIMARY_BG_COLOR};
   min-height: 300px;
   max-height: 900px;
   overflow-y: auto;
@@ -121,21 +121,21 @@ const Filters = styled.div`
 `;
 
 const AllFilter = styled.div`
-  border: 1px solid ${PALLETE.CLUB_RED};
-  color: ${PALLETE.CLUB_RED};
-  font-size: ${PALLETE.FONT_XM};
+  border: 1px solid ${PALETTE.CLUB_RED};
+  color: ${PALETTE.CLUB_RED};
+  font-size: ${PALETTE.FONT_XM};
   padding: 4px 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   &:hover {
-    color: ${PALLETE.CLUB_RED_HOVER};
-    border: 1px solid ${PALLETE.CLUB_RED_HOVER};
+    color: ${PALETTE.CLUB_RED_HOVER};
+    border: 1px solid ${PALETTE.CLUB_RED_HOVER};
   }
 `;
 
 const SelectedFilter = styled.div`
-  color: ${PALLETE.CLUB_RED};
-  font-size: ${PALLETE.FONT_XM};
+  color: ${PALETTE.CLUB_RED};
+  font-size: ${PALETTE.FONT_XM};
 `;
 
 const Title = styled.h1`

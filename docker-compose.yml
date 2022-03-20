@@ -1,6 +1,9 @@
 version: "3.9"
 services:
   web:
-    build: .
+    build:
+      context: .
+      args:
+          - CONN_API=${CONN_API}
     ports:
       - "80:80"

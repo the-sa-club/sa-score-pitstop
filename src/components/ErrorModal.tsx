@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { PALLETE } from "../constants";
+import { PALETTE } from "../constants";
 import { Modal } from "./shared/Modal";
 import { ReactComponent as CloseIcon } from "../assets/images/close-bold-svgrepo-com.svg";
 import { useAppStore } from "../data/store";
@@ -64,14 +64,14 @@ export const ErrorModal = () => {
 
 const Wrapper = styled.div`
   padding: 20px 0;
-  border: 1px solid ${PALLETE.CLUB_RED};
-  background: ${PALLETE.CLUB_RED};
-  box-shadow: 0 0 2px 1px ${PALLETE.PRIMARY_BG_COLOR};
+  border: 1px solid ${PALETTE.CLUB_RED};
+  background: ${PALETTE.CLUB_RED};
+  box-shadow: 0 0 2px 1px ${PALETTE.PRIMARY_BG_COLOR};
   border-radius: 4px;
   overflow-y: auto;
   max-height: 100vh;
-  color: ${PALLETE.FONT_COLOR};
-  @media ${PALLETE.DEVICE.mobileL} {
+  color: ${PALETTE.FONT_COLOR};
+  @media ${PALETTE.DEVICE.mobileL} {
       max-width: 90%;
   }
 `;
@@ -96,7 +96,7 @@ const Title = styled.h2`
 const Body = styled.div<{maxWidth?: string}>`
   padding: 16px 16px;
   max-width: ${p => p.maxWidth ?? '400px'};
-  font-size: ${PALLETE.FONT_MD};
+  font-size: ${PALETTE.FONT_MD};
   line-height: 1.5;
 
   min-height: 100px;
@@ -104,7 +104,7 @@ const Body = styled.div<{maxWidth?: string}>`
   flex-direction: column;
   justify-content: center;
 
-  @media ${PALLETE.DEVICE.mobileL} {
+  @media ${PALETTE.DEVICE.mobileL} {
       max-width: 100%;
   }
 `;
@@ -112,12 +112,12 @@ const Body = styled.div<{maxWidth?: string}>`
 const Sperator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${PALLETE.FONT_COLOR};
+  background-color: ${PALETTE.FONT_COLOR};
 `;
 
 const Link = styled.a`
-  color: ${PALLETE.FONT_COLOR};
+  color: ${PALETTE.FONT_COLOR};
   &:hover {
-    color: ${PALLETE.CLUB_RED_HOVER};
+    color: ${PALETTE.CLUB_RED_HOVER};
   }
 `

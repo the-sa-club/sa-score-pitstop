@@ -1,17 +1,39 @@
-import { DexInstructions, Market} from "@project-serum/serum";
+import {DexInstructions, Market} from "@project-serum/serum";
+import {ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID,} from "@solana/spl-token";
+import {Keypair, PublicKey, TransactionInstruction} from "@solana/web3.js";
 import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  Token,
-  TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
-import { Account, Keypair, PublicKey, TransactionInstruction } from "@solana/web3.js";
-import { createHarvestInstruction, createRearmInstruction, createRefeedInstruction, createRefuelInstruction, createRepairInstruction } from "@staratlas/factory";
+  createHarvestInstruction,
+  createRearmInstruction,
+  createRefeedInstruction,
+  createRefuelInstruction,
+  createRepairInstruction
+} from "@staratlas/factory";
 import axios from "axios";
-import { ceil, floor, round } from "mathjs";
-import { AND_WALLET, ARMS_MARKET_CRED, ARMS_TOKEN, ATLAS_DEX, ATLAS_MINT, BAC_WALLET, BUY_SUPPLY_MODES, CONN, FLEET_PROGRAM, FOOD_MARKET_CRED, FOOD_TOKEN, FUEL_MARKET_CRED, FUEL_TOKEN, GUILD_WALLET, MarketsCredentials, SUPPLIES_MINTS, SUPPLIES_NAMES, TOOLS_MARKET_CRED, TOOLS_TOKEN } from "../constants";
-import { useAppStore, useFleetStore } from "../data/store";
-import { ErrorModalTypes, InvoiceResources, MarketPriceDetail, MarketPriceResources } from "../data/types";
-import { retryAsync } from "../utils";
+import {ceil, floor, round} from "mathjs";
+import {
+  AND_WALLET,
+  ARMS_MARKET_CRED,
+  ARMS_TOKEN,
+  ATLAS_DEX,
+  ATLAS_MINT,
+  BAC_WALLET,
+  BUY_SUPPLY_MODES,
+  CONN,
+  FLEET_PROGRAM,
+  FOOD_MARKET_CRED,
+  FOOD_TOKEN,
+  FUEL_MARKET_CRED,
+  FUEL_TOKEN,
+  GUILD_WALLET,
+  MarketsCredentials,
+  SUPPLIES_MINTS,
+  SUPPLIES_NAMES,
+  TOOLS_MARKET_CRED,
+  TOOLS_TOKEN
+} from "../constants";
+import {useAppStore, useFleetStore} from "../data/store";
+import {ErrorModalTypes, InvoiceResources, MarketPriceDetail, MarketPriceResources} from "../data/types";
+import {retryAsync} from "../utils";
 
 
 export class MarketService  {
@@ -488,13 +510,13 @@ export class MarketService  {
     if (buySupplyMode == BUY_SUPPLY_MODES.OPTIMAL) {
       
       fleetsToResupply.forEach(fleet => {
-        const fuelTarget = Math.min((fleet.resources.fuel.burnRate * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.fuel.maxUnits)
+        const fuelTarget = Math.min((fleet.resources.fuel.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.fuel.maxUnits)
         const fuelNeed = ceil(Math.max(fuelTarget - fleet.resources.fuel.unitsLeft, 0));
         
-        const toolsTarget = Math.min((fleet.resources.health.burnRate * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.health.maxUnits)
+        const toolsTarget = Math.min((fleet.resources.health.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.health.maxUnits)
         const toolsNeed = ceil(Math.max(toolsTarget - fleet.resources.health.unitsLeft, 0));
         
-        const armsTarget = Math.min((fleet.resources.arms.burnRate * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.arms.maxUnits)
+        const armsTarget = Math.min((fleet.resources.arms.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.arms.maxUnits)
         const armsNeed = ceil(Math.max(armsTarget - fleet.resources.arms.unitsLeft, 0));
         
 
@@ -517,13 +539,13 @@ export class MarketService  {
         let shipPk = new PublicKey(fleet.shipMint);
         const ixs: TransactionInstruction[] = []; 
 
-        const fuelTarget = Math.min((fleet.resources.fuel.burnRate * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.fuel.maxUnits)
+        const fuelTarget = Math.min((fleet.resources.fuel.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.fuel.maxUnits)
         const fuelNeed = ceil(Math.max(fuelTarget - fleet.resources.fuel.unitsLeft, 0));
         
-        const toolsTarget = Math.min((fleet.resources.health.burnRate * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.health.maxUnits)
+        const toolsTarget = Math.min((fleet.resources.health.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.health.maxUnits)
         const toolsNeed = ceil(Math.max(toolsTarget - fleet.resources.health.unitsLeft, 0));
         
-        const armsTarget = Math.min((fleet.resources.arms.burnRate * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.arms.maxUnits)
+        const armsTarget = Math.min((fleet.resources.arms.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()   * fleet.resources.food.maxSeconds), fleet.resources.arms.maxUnits)
         const armsNeed = ceil(Math.max(armsTarget - fleet.resources.arms.unitsLeft, 0));
 
         if (ceil(fleet.resources.food.maxUnits - fleet.resources.food.unitsLeft) > 1 ) {
@@ -550,16 +572,16 @@ export class MarketService  {
       
       fleetsToResupply.forEach(fleet => {
 
-        const foodTarget = Math.min((fleet.resources.food.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.food.maxUnits)
+        const foodTarget = Math.min((fleet.resources.food.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.food.maxUnits)
         const foodNeed = ceil(Math.max(foodTarget - fleet.resources.food.unitsLeft, 0));
 
-        const fuelTarget = Math.min((fleet.resources.fuel.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.fuel.maxUnits)
+        const fuelTarget = Math.min((fleet.resources.fuel.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.fuel.maxUnits)
         const fuelNeed = ceil(Math.max(fuelTarget - fleet.resources.fuel.unitsLeft, 0));
         
-        const toolsTarget = Math.min((fleet.resources.health.burnRate * fleet.shipQuantityInEscrow.toNumber() * maxSeconds), fleet.resources.health.maxUnits)
+        const toolsTarget = Math.min((fleet.resources.health.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber() * maxSeconds), fleet.resources.health.maxUnits)
         const toolsNeed = ceil(Math.max(toolsTarget - fleet.resources.health.unitsLeft, 0));
         
-        const armsTarget = Math.min((fleet.resources.arms.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.arms.maxUnits)
+        const armsTarget = Math.min((fleet.resources.arms.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.arms.maxUnits)
         const armsNeed = ceil(Math.max(armsTarget - fleet.resources.arms.unitsLeft, 0));
 
         supplyStorage.food  -= foodNeed; 
@@ -580,16 +602,16 @@ export class MarketService  {
         const ixs: TransactionInstruction[] = []; 
 
 
-        const foodTarget = Math.min((fleet.resources.food.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.food.maxUnits)
+        const foodTarget = Math.min((fleet.resources.food.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.food.maxUnits)
         const foodNeed = ceil(Math.max(foodTarget - fleet.resources.food.unitsLeft, 0));
 
-        const fuelTarget = Math.min((fleet.resources.fuel.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.fuel.maxUnits)
+        const fuelTarget = Math.min((fleet.resources.fuel.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.fuel.maxUnits)
         const fuelNeed = ceil(Math.max(fuelTarget - fleet.resources.fuel.unitsLeft, 0));
         
-        const toolsTarget = Math.min((fleet.resources.health.burnRate * fleet.shipQuantityInEscrow.toNumber() * maxSeconds), fleet.resources.health.maxUnits)
+        const toolsTarget = Math.min((fleet.resources.health.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber() * maxSeconds), fleet.resources.health.maxUnits)
         const toolsNeed = ceil(Math.max(toolsTarget - fleet.resources.health.unitsLeft, 0));
         
-        const armsTarget = Math.min((fleet.resources.arms.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.arms.maxUnits)
+        const armsTarget = Math.min((fleet.resources.arms.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.arms.maxUnits)
         const armsNeed = ceil(Math.max(armsTarget - fleet.resources.arms.unitsLeft, 0));
 
 
@@ -638,16 +660,16 @@ export class MarketService  {
 
       fleetsToResupply.forEach(fleet => {
 
-        const foodTarget = Math.min((fleet.resources.food.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.food.maxUnits)
+        const foodTarget = Math.min((fleet.resources.food.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.food.maxUnits)
         const foodNeed = ceil(Math.max(foodTarget - fleet.resources.food.unitsLeft, 0));
 
-        const fuelTarget = Math.min((fleet.resources.fuel.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.fuel.maxUnits)
+        const fuelTarget = Math.min((fleet.resources.fuel.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.fuel.maxUnits)
         const fuelNeed = ceil(Math.max(fuelTarget - fleet.resources.fuel.unitsLeft, 0));
         
-        const toolsTarget = Math.min((fleet.resources.health.burnRate * fleet.shipQuantityInEscrow.toNumber() * maxSeconds), fleet.resources.health.maxUnits)
+        const toolsTarget = Math.min((fleet.resources.health.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber() * maxSeconds), fleet.resources.health.maxUnits)
         const toolsNeed = ceil(Math.max(toolsTarget - fleet.resources.health.unitsLeft, 0));
         
-        const armsTarget = Math.min((fleet.resources.arms.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.arms.maxUnits)
+        const armsTarget = Math.min((fleet.resources.arms.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.arms.maxUnits)
         const armsNeed = ceil(Math.max(armsTarget - fleet.resources.arms.unitsLeft, 0));
 
         supplyStorage.food  -= foodNeed; 
@@ -668,16 +690,16 @@ export class MarketService  {
         let shipPk = new PublicKey(fleet.shipMint);
         const ixs: TransactionInstruction[] = []; 
 
-        const foodTarget = Math.min((fleet.resources.food.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.food.maxUnits)
+        const foodTarget = Math.min((fleet.resources.food.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.food.maxUnits)
         const foodNeed = ceil(Math.max(foodTarget - fleet.resources.food.unitsLeft, 0));
 
-        const fuelTarget = Math.min((fleet.resources.fuel.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.fuel.maxUnits)
+        const fuelTarget = Math.min((fleet.resources.fuel.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.fuel.maxUnits)
         const fuelNeed = ceil(Math.max(fuelTarget - fleet.resources.fuel.unitsLeft, 0));
         
-        const toolsTarget = Math.min((fleet.resources.health.burnRate * fleet.shipQuantityInEscrow.toNumber() * maxSeconds), fleet.resources.health.maxUnits)
+        const toolsTarget = Math.min((fleet.resources.health.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber() * maxSeconds), fleet.resources.health.maxUnits)
         const toolsNeed = ceil(Math.max(toolsTarget - fleet.resources.health.unitsLeft, 0));
         
-        const armsTarget = Math.min((fleet.resources.arms.burnRate * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.arms.maxUnits)
+        const armsTarget = Math.min((fleet.resources.arms.burnRatePerShip * fleet.shipQuantityInEscrow.toNumber()  * maxSeconds), fleet.resources.arms.maxUnits)
         const armsNeed = ceil(Math.max(armsTarget - fleet.resources.arms.unitsLeft, 0));
 
         
@@ -734,6 +756,8 @@ export class MarketService  {
         return 'Resupplies only the resources that have been depleted'
       case BUY_SUPPLY_MODES.URGENT:
         return 'Ensures 12 hours worth of supplies for all resources'
+      case BUY_SUPPLY_MODES.CUSTOM:
+        return "You can buy supplies to cover as many days you want. You can't use Resupply button in this mode."
     }
   }
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { COLORS, PALLETE } from "../constants";
+import { COLORS, PALETTE } from "../constants";
 import { getHours } from "../utils";
 import { Clock } from "./Clock";
 
@@ -68,7 +68,7 @@ const Wrapper = styled.div`
   padding: 8px;
   border-radius: 8px;
   box-shadow: inset;
-  @media ${PALLETE.DEVICE.mobileL} {
+  @media ${PALETTE.DEVICE.mobileL} {
     width: 50%;
     min-width: 0;
   }

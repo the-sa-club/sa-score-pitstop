@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { PALLETE } from "../../constants";
+import { PALETTE } from "../../constants";
 
 const TooltipWrapper: React.FC<{text: string}> = ({ children, text }) => {
   const [opacity, setOpacity] = React.useState(0);
@@ -33,7 +33,7 @@ const Wrapper = styled.div`
 const Content = styled.div<{ opcaity: number }>`
   position: absolute;
   z-index: 99;
-  background-color: ${PALLETE.SECONDARY_BG_COLOR};
+  background-color: ${PALETTE.SECONDARY_BG_COLOR};
   height: auto;
   max-width: 214px;
   width: max-content;
@@ -43,5 +43,5 @@ const Content = styled.div<{ opcaity: number }>`
   padding: 8px;
   border-radius: 4px;
   bottom: 120%;;
-  font-size: ${PALLETE.FONT_XM};
+  font-size: ${PALETTE.FONT_XM};
 `;

@@ -44,7 +44,6 @@ export function thousandsFormatter(v: number, coin: number) {
     formatted = numberWithCommas(splitted[0])
   }
 
-
   if(parseFloat(formatted) == 0){
     return 0;
   }
