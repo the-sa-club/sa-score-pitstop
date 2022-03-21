@@ -20,7 +20,7 @@ export const Footer = () => {
                     <Donate>
                         <b> Support us (donate):</b>
                         <DonationAddress>
-                            9VV4TyRbNXfKcaG7kpxZ4WNax69kq59yNwtLHsPpEhSL
+                            4xVxV4gPeyQ6thFAC4aXRRx8Qb4JtisvdURGsV3KodFN
                             <AtlasIconWrapper><AtlasIcon width={15} height={15}/></AtlasIconWrapper>
                             <AtlasIconWrapper>
                                 <img

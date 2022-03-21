@@ -102,7 +102,7 @@ const ListWraper = styled.div`
   top: 105%;
   left: 0;
   right: 0;
-  height: 175px;
+  height: 184px;
   background-color: ${PALETTE.CLUB_RED_DENSE};
   border-radius: 4px;
   display: flex;

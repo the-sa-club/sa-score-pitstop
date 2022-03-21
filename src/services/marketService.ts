@@ -526,8 +526,6 @@ export class MarketService  {
         supplyStorage.arms  -= armsNeed
       })
       
-      // console.log(supplyStorage, inventory);
-      
 
       // ? supply is not enough
       if (round(Math.min(...Object.values(supplyStorage))) < 0) {
@@ -555,7 +553,6 @@ export class MarketService  {
         if (armsNeed > 1 ) ixs.push(await createReArmIx(armsNeed, shipPk))
         if (toolsNeed > 1) ixs.push(await createRepairIx(toolsNeed, shipPk))
 
-        console.log(ixs);
         return ixs;
 
         

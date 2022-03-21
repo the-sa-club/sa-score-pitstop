@@ -1,7 +1,16 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @font-face {
   font-family: "nasalization";
   src: url("./assets/fonts/nasalization-rg.otf");
+}
+
+@font-face {
+  font-family: "tungsten";
+  src: url("./assets/fonts/tungsten-book.woff");
+}
+
+@font-face {
+  font-family: "CarroisGothic";
+  src: url("./assets/fonts/CarroisGothic-Regular.ttf");
 }
 
 $secondary-bg-color: #252525;
@@ -34,7 +43,8 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: "DM Sans";
+  font-family: "CarroisGothic";
+  line-height: 1.5;
 }
 *::-webkit-scrollbar-track {
   display: none;

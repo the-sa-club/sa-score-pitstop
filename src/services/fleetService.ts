@@ -318,7 +318,6 @@ export class FleetService {
                 unitsTarget.fuel += (maxSeconds * fleet.resources.fuel.burnRatePerFleet);
                 unitsTarget.tools += (maxSeconds * fleet.resources.health.burnRatePerFleet);
             });
-            console.log("unitsTarget.ammo --- A: ", unitsTarget.ammo)
 
             // ? food
             const foodUnitsToBuy = Math.max((unitsTarget.food - (resourcesData.food.supply + resourcesData.food.unitsLeft) + 20), 0);
@@ -980,15 +979,9 @@ export class FleetService {
             unitsTarget.ammo += (maxSeconds * fleet.resources.arms.burnRatePerFleet);
             unitsTarget.fuel += (maxSeconds * fleet.resources.fuel.burnRatePerFleet);
             unitsTarget.tools += (maxSeconds * fleet.resources.health.burnRatePerFleet);
-            console.log(`Fleet ${fleet.name} -- maxUnits ${fleet.resources.health.maxUnits} -- time required to burn max units ${fleet.resources.health.maxUnits / fleet.resources.health.burnRatePerShip} -- maxSeconds ${fleet.resources.health.maxSeconds}`)
-            console.log(`Fleet ${fleet.name} -- need for ${maxSeconds/60/60/24} days -- ${maxSeconds * fleet.resources.health.burnRatePerShip} tools`);
-            console.log(`Fleet ${fleet.name} -- `, fleet.resources)
-            console.log(`********************* \n`)
         });
 
 
-        console.log("unitsTarget.ammo:", unitsTarget.ammo)
-        console.log("resourcesData.ammo.supply:", resourcesData.ammo.supply)
 
         // ? food
         resourcesToBuy.food.amount = Math.max((unitsTarget.food - (resourcesData.food.supply) + 20), 0);

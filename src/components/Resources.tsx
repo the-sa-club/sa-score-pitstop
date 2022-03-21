@@ -296,7 +296,6 @@ export const Resources: React.FC<Props> = () => {
                     });
                 }
 
-                console.log(invoiceResources);
 
                 if (
                     Math.max(
