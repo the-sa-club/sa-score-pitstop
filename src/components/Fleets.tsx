@@ -1,15 +1,18 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import * as React from "react";
+import { text } from "stream/consumers";
 import styled from "styled-components";
 import shallow from "zustand/shallow";
-import { PALETTE } from "../constants";
+import { PALETTE, ShipsFirePower } from "../constants";
 import { useAppStore, useFleetStore, useResourceStore } from "../data/store";
 import { IFleet } from "../data/types";
 import { FleetService } from "../services/fleetService";
 import { MarketService } from "../services/marketService";
 import { Fleet } from "./Fleet";
+import { RefreshButton } from "./shared/Button";
 import { Container } from "./shared/styled/Styled";
-
+import { ReactComponent as InfoIcon } from "../assets/images/info.svg";
+import TooltipWrapper from "./shared/TooltipWrapper";
 
 const Fleets = () => {
   const { publicKey } = useWallet();
@@ -31,7 +34,7 @@ const Fleets = () => {
   );
   const onSelectFleet = (fleet: IFleet) => selectFleet(fleet);
   const onUnSelectFleet = (fleet: IFleet) => unselectFleet(fleet);
- 
+  const [firePower, setFirePower] = React.useState<number | null>(null);
 
   const selectAll = () => {
     selectFleet(undefined, "all");
@@ -42,6 +45,22 @@ const Fleets = () => {
   };
 
   const anySelected = () => selectedFleets.length > 0;
+
+  React.useEffect(() => {
+    let _firePower = 0;
+    let _fleets = selectedFleets.length == 0 ? fleets : selectedFleets;
+    _fleets.forEach((f) => {
+      if (!ShipsFirePower[f.name]) {
+        _firePower += 0;
+      } else {
+        _firePower +=
+          ShipsFirePower[f.name].missileDPS *
+            f.shipQuantityInEscrow.toNumber() +
+          ShipsFirePower[f.name].weaponDPS * f.shipQuantityInEscrow.toNumber();
+      }
+    });
+    setFirePower(_firePower);
+  }, [selectedFleets]);
 
   return (
     <Wrapper>
@@ -59,10 +78,49 @@ const Fleets = () => {
                   <AllFilter onClick={selectAll}>SELECT ALL</AllFilter>
                 )}
               </Filters> */}
-              
+
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <TooltipWrapper
+                  text={
+                    "Firepower score is not an official Star Atlas metric. It uses information from the first Star Atlas Economics Report which suggests ship component performance is increased by a factor of 2.721 per ship class. We start at an arbitrary base number and apply this multiplier. In this calculation it is also assumed that missile firepower is double weapon firepower."
+                  }
+                >
+                  <div
+                    style={{
+                      marginRight: 10,
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <InfoIcon width={20} />
+                  </div>
+                </TooltipWrapper>{" "}
+                <Title>
+                  FIREPOWER :{" "}
+                  <span
+                    style={{
+                      color: PALETTE.CLUB_RED_DENSE,
+                      marginRight: 8,
+                      marginLeft: 8,
+                    }}
+                  >
+                    {firePower}
+                  </span>
+                  {selectedFleets.length == fleets.length ||
+                  selectedFleets.length == 0 ? (
+                    <span
+                      style={{ color: PALETTE.CLUB_RED_DENSE, marginRight: 8 }}
+                    >
+                      (ALL)
+                    </span>
+                  ) : (
+                    ""
+                  )}{" "}
+                </Title>
+              </div>
             </Header>
           )}
-          <div style={{width: '100%'}}>
+          <div style={{ width: "100%" }}>
             <FleetItems>
               {fleets.map((fleet, indx) => (
                 <Fleet
@@ -78,7 +136,6 @@ const Fleets = () => {
                   }
                 />
               ))}
-
             </FleetItems>
             {/* <Spinner isLoading={isLoading} /> */}
           </div>
@@ -106,14 +163,13 @@ const FleetWrapper = styled.div`
   background-color: ${PALETTE.PRIMARY_BG_COLOR};
   min-height: 300px;
   max-height: 900px;
-  overflow-y: auto;
+  overflow-y: inherit;
 `;
 
 const FleetItems = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-
 `;
 
 const Filters = styled.div`
@@ -145,10 +201,10 @@ const Title = styled.h1`
 `;
 
 const Header = styled.div`
+  position: relative;
   width: 100%;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
-
