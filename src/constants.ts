@@ -43,14 +43,14 @@ export const PALETTE = {
   CLUB_RED: "#d02452d3",
   CLUB_RED_DENSE: "#d02452",
   CLUB_RED_HOVER: "#d3768fd3",
-  DEVICE : {
+  DEVICE: {
     mobileS: `(max-width: 320px)`,
     mobileM: `(max-width: 375px)`,
     mobileL: `(max-width: 768px)`,
     laptop: `(min-width: 1024px)`,
     laptopL: `(min-width: 1440px)`,
     desktop: `(min-width: 2560px)`,
-  }
+  },
 };
 
 export enum BUY_SUPPLY_MODES {
@@ -58,7 +58,7 @@ export enum BUY_SUPPLY_MODES {
   OPTIMAL = "OPTIMAL SUPPLY",
   URGENT = "URGENT ONLY SUPPLY",
   CRITICAL = "CRITICAL SUPPLY",
-  CUSTOM = "CUSTOM"
+  // CUSTOM = "CUSTOM",
   // NONE = "NONE",
 }
 
@@ -178,9 +178,164 @@ export const FUEL_TOKEN = new Token(
   new Keypair()
 );
 
-
 export const ATLAS_DECIMAL = 1;
 export const USDC_DECIMAL = 2;
 export const RESOURCE_DECIMAL = 0;
-export const FEE = 0.05
-export const FIXED_FEE = 1
+export const FEE = 0.05;
+export const FIXED_FEE = 1;
+
+export const ShipsFirePower: {
+  [key: string]: {
+    missileDPS: number;
+    weaponDPS: number;
+  }
+} = {
+  "Vzus solos": {
+    missileDPS: 0,
+    weaponDPS: 27,
+  },
+  "Pearce X4": {
+    missileDPS: 0,
+    weaponDPS: 40,
+  },
+  "Fimbul ECOS Unibomba": {
+    missileDPS: 0,
+    weaponDPS: 20,
+  },
+  "Opal Jet": {
+    missileDPS: 0,
+    weaponDPS: 20,
+  },
+  "Pearce X5": {
+    missileDPS: 0,
+    weaponDPS: 163,
+  },
+  "Opal Jetjet": {
+    missileDPS: 0,
+    weaponDPS: 82,
+  },
+  "Calico Medtech": {
+    missileDPS: 74,
+    weaponDPS: 54,
+  },
+  "Pearce R6": {
+    missileDPS: 201,
+    weaponDPS: 148,
+  },
+  "Vzus ambwe": {
+    missileDPS: 201,
+    weaponDPS: 202,
+  },
+  "Pearce X6": {
+    missileDPS: 201,
+    weaponDPS: 405,
+  },
+  "Fimbul BYOS Earp": {
+    missileDPS: 201,
+    weaponDPS: 403,
+  },
+  "Busan Thrill of Life": {
+    missileDPS: 201,
+    weaponDPS: 296,
+  },
+  "Ogrika Mik": {
+    missileDPS: 74,
+    weaponDPS: 222,
+  },
+  "Rainbow Chi": {
+    missileDPS: 201,
+    weaponDPS: 296,
+  },
+  "Tufa Feist": {
+    missileDPS: 201,
+    weaponDPS: 222,
+  },
+  "Calico Evac": {
+    missileDPS: 201,
+    weaponDPS: 403,
+  },
+  "Vzus opod": {
+    missileDPS: 548,
+    weaponDPS: 604,
+  },
+  "Pearce F4": {
+    missileDPS: 1096,
+    weaponDPS: 1096,
+  },
+  "Calico ATS Enforcer": {
+    missileDPS: 1096,
+    weaponDPS: 1894,
+  },
+  "Fimbul Mamba": {
+    missileDPS: 548,
+    weaponDPS: 1499,
+  },
+  "Fimbul BYOS Packlite": {
+    missileDPS: 548,
+    weaponDPS: 403,
+  },
+  "Calico Compakt Hero": {
+    missileDPS: 548,
+    weaponDPS: 806,
+  },
+  "Ogrika Tursic": {
+    missileDPS: 403,
+    weaponDPS: 806,
+  },
+  "Rainbow Om": {
+    missileDPS: 201,
+    weaponDPS: 806,
+  },
+  "Opal Bitboat": {
+    missileDPS: 201,
+    weaponDPS: 2193,
+  },
+  "Fimbul ECOS Greenader": {
+    missileDPS: 4059,
+    weaponDPS: 1209,
+  },
+  "Pearce R8": {
+    missileDPS: 201,
+    weaponDPS: 1096,
+  },
+  "Rainbow Arc": {
+    missileDPS: 548,
+    weaponDPS: 2193,
+  },
+  "Ogrika Thripid": {
+    missileDPS: 403,
+    weaponDPS: 2193,
+  },
+  "Ogrika Jod Asteris": {
+    missileDPS: 4059,
+    weaponDPS: 5966,
+  },
+  "Fimbul ECOS Bombarella": {
+    missileDPS: 4059,
+    weaponDPS: 2193,
+  },
+  "Busan Maiden Heart": {
+    missileDPS: 4059,
+    weaponDPS: 8159,
+  },
+  "Vzus ballad": {
+    missileDPS: 4059,
+    weaponDPS: 16276,
+  },
+  "Calico Guardian": {
+    missileDPS: 4059,
+    weaponDPS: 7458,
+  },
+  "Pearce C9": {
+    missileDPS: 4059,
+    weaponDPS: 16276,
+  },
+  "Pearce C11": {
+    missileDPS: 11043,
+    weaponDPS: 39784,
+  },
+  "Fimbul ECOS Treearrow": {
+    missileDPS: 22087,
+    weaponDPS: 18511,
+  },
+};
