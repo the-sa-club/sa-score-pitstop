@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { PALETTE } from "../../constants";
 
-const TooltipWrapper: React.FC<{text: string}> = ({ children, text }) => {
+const TooltipWrapper: React.FC<{ text?: string }> = ({ children, text }) => {
   const [opacity, setOpacity] = React.useState(0);
 
   const onMouseEnter = async () => {
@@ -13,11 +13,7 @@ const TooltipWrapper: React.FC<{text: string}> = ({ children, text }) => {
   };
 
   return (
-    <Wrapper
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      
-    >
+    <Wrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       {children}
       <Content opcaity={opacity}>{text}</Content>
     </Wrapper>
@@ -30,18 +26,19 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-const Content = styled.div<{ opcaity: number }>`
+const Content = styled.div<{ opcaity: number; color?: string }>`
   position: absolute;
   z-index: 99;
   background-color: ${PALETTE.SECONDARY_BG_COLOR};
   height: auto;
   max-width: 214px;
   width: max-content;
-  opacity: ${p => p.opcaity};
-  visibility: ${p => p.opcaity ?'visible' : 'hidden'};
+  opacity: ${(p) => p.opcaity};
+  visibility: ${(p) => (p.opcaity ? "visible" : "hidden")};
   transition: opacity 0.5s ease;
   padding: 8px;
   border-radius: 4px;
-  bottom: 120%;;
+  bottom: 120%;
   font-size: ${PALETTE.FONT_XM};
+  color: ${(p) => p.color ?? PALETTE.FONT_COLOR};
 `;

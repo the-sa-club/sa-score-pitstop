@@ -753,8 +753,8 @@ export class MarketService  {
         return 'Resupplies only the resources that have been depleted'
       case BUY_SUPPLY_MODES.URGENT:
         return 'Ensures 12 hours worth of supplies for all resources'
-      case BUY_SUPPLY_MODES.CUSTOM:
-        return "You can buy supplies to cover as many days you want. You can't use Resupply button in this mode."
+      // case BUY_SUPPLY_MODES.CUSTOM:
+      //   return "You can buy supplies to cover as many days you want. You can't use Resupply button in this mode."
     }
   }
 

@@ -422,44 +422,44 @@ export class FleetService {
         }
 
         // ! Custom
-        if (mode == BUY_SUPPLY_MODES.CUSTOM) {
+        // if (mode == BUY_SUPPLY_MODES.CUSTOM) {
 
-            const unitsTarget = {
-                food: resourcesToBuy!.food.amount,
-                ammo: resourcesToBuy!.ammo.amount,
-                fuel: resourcesToBuy!.fuel.amount,
-                tools: resourcesToBuy!.tools.amount
-            }
-
-
-            // ? food
-            const foodUnitsToBuy = unitsTarget.food;
-            _resourcesToBuy.food.amount = foodUnitsToBuy;
-            _resourcesToBuy.food.atlas = foodPriceDetials.atlas * foodUnitsToBuy;
-            _resourcesToBuy.food.usdc = foodPriceDetials.usdc * foodUnitsToBuy;
-
-            // ? ammo
-            const ammoUnitsToBuy = unitsTarget.ammo;
-            _resourcesToBuy.ammo.amount = ammoUnitsToBuy;
-            _resourcesToBuy.ammo.atlas = ammoPriceDetials.atlas * ammoUnitsToBuy;
-            _resourcesToBuy.ammo.usdc = ammoPriceDetials.usdc * ammoUnitsToBuy;
-
-            // ? fuel
-            const fuelUnitsToBuy = unitsTarget.fuel;
-            _resourcesToBuy.fuel.amount = fuelUnitsToBuy;
-            _resourcesToBuy.fuel.atlas = fuelPriceDetials.atlas * fuelUnitsToBuy;
-            _resourcesToBuy.fuel.usdc = fuelPriceDetials.usdc * fuelUnitsToBuy;
+        //     const unitsTarget = {
+        //         food: resourcesToBuy!.food.amount,
+        //         ammo: resourcesToBuy!.ammo.amount,
+        //         fuel: resourcesToBuy!.fuel.amount,
+        //         tools: resourcesToBuy!.tools.amount
+        //     }
 
 
-            //? Tools
-            const toolsUnitsToBuy = unitsTarget.tools;
-            _resourcesToBuy.tools.amount = toolsUnitsToBuy;
-            _resourcesToBuy.tools.atlas = toolPriceDetials.atlas * toolsUnitsToBuy;
-            _resourcesToBuy.tools.usdc = toolPriceDetials.usdc * toolsUnitsToBuy;
+        //     // ? food
+        //     const foodUnitsToBuy = unitsTarget.food;
+        //     _resourcesToBuy.food.amount = foodUnitsToBuy;
+        //     _resourcesToBuy.food.atlas = foodPriceDetials.atlas * foodUnitsToBuy;
+        //     _resourcesToBuy.food.usdc = foodPriceDetials.usdc * foodUnitsToBuy;
 
-            //? Market
-            _resourcesToBuy.market.rate = ammoPriceDetials.rate;
-        }
+        //     // ? ammo
+        //     const ammoUnitsToBuy = unitsTarget.ammo;
+        //     _resourcesToBuy.ammo.amount = ammoUnitsToBuy;
+        //     _resourcesToBuy.ammo.atlas = ammoPriceDetials.atlas * ammoUnitsToBuy;
+        //     _resourcesToBuy.ammo.usdc = ammoPriceDetials.usdc * ammoUnitsToBuy;
+
+        //     // ? fuel
+        //     const fuelUnitsToBuy = unitsTarget.fuel;
+        //     _resourcesToBuy.fuel.amount = fuelUnitsToBuy;
+        //     _resourcesToBuy.fuel.atlas = fuelPriceDetials.atlas * fuelUnitsToBuy;
+        //     _resourcesToBuy.fuel.usdc = fuelPriceDetials.usdc * fuelUnitsToBuy;
+
+
+        //     //? Tools
+        //     const toolsUnitsToBuy = unitsTarget.tools;
+        //     _resourcesToBuy.tools.amount = toolsUnitsToBuy;
+        //     _resourcesToBuy.tools.atlas = toolPriceDetials.atlas * toolsUnitsToBuy;
+        //     _resourcesToBuy.tools.usdc = toolPriceDetials.usdc * toolsUnitsToBuy;
+
+        //     //? Market
+        //     _resourcesToBuy.market.rate = ammoPriceDetials.rate;
+        // }
 
         return _resourcesToBuy;
 

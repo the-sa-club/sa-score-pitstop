@@ -17,6 +17,7 @@ import {Container} from "./shared/styled/Styled";
 import {Starter} from "./Starter";
 import {ReactComponent as LoadingSpinner} from "../assets/images/spinner.svg";
 import {Footer} from "./Footer";
+import { RefreshButton } from "./shared/Button";
 
 
 function App() {
@@ -166,27 +167,5 @@ const Actions = styled.div`
 `
 
 
-const RefreshButton = styled.button`
-  border: 1px solid ${PALETTE.CLUB_RED};
-  color: ${PALETTE.CLUB_RED};
-  font-size: ${PALETTE.FONT_SM};
-  padding: 12px 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background-color: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 4px;
 
-  &:hover {
-    color: ${PALETTE.CLUB_RED_HOVER};
-    border: 1px solid ${PALETTE.CLUB_RED_HOVER};
-  }
-
-  @media ${PALETTE.DEVICE.mobileL} {
-    margin-top: 20px;
-    margin-left: 8px;
-  }
-`;
 
