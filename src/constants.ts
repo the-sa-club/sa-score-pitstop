@@ -190,7 +190,7 @@ export const ShipsFirePower: {
     weaponDPS: number;
   }
 } = {
-  "Vzus solos": {
+  "VZUS solos": {
     missileDPS: 0,
     weaponDPS: 27,
   },
@@ -222,7 +222,7 @@ export const ShipsFirePower: {
     missileDPS: 201,
     weaponDPS: 148,
   },
-  "Vzus ambwe": {
+  "VZUS ambwe": {
     missileDPS: 201,
     weaponDPS: 202,
   },
@@ -233,6 +233,10 @@ export const ShipsFirePower: {
   "Fimbul BYOS Earp": {
     missileDPS: 201,
     weaponDPS: 403,
+  },
+  "Fimbul BYOS Tankship": {
+    missileDPS: 40,
+    weaponDPS: 59410,
   },
   "Busan Thrill of Life": {
     missileDPS: 201,
@@ -254,7 +258,7 @@ export const ShipsFirePower: {
     missileDPS: 201,
     weaponDPS: 403,
   },
-  "Vzus opod": {
+  "VZUS opod": {
     missileDPS: 548,
     weaponDPS: 604,
   },
@@ -318,7 +322,7 @@ export const ShipsFirePower: {
     missileDPS: 4059,
     weaponDPS: 8159,
   },
-  "Vzus ballad": {
+  "VZUS ballad": {
     missileDPS: 4059,
     weaponDPS: 16276,
   },
