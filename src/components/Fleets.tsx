@@ -82,7 +82,7 @@ const Fleets = () => {
               <div style={{ display: "flex", alignItems: "center" }}>
                 <TooltipWrapper
                   text={
-                    "Firepower score is not an official Star Atlas metric. It uses information from the first Star Atlas Economics Report which suggests ship component performance is increased by a factor of 2.721 per ship class. We start at an arbitrary base number and apply this multiplier. In this calculation it is also assumed that missile firepower is double weapon firepower."
+                    "Firepower score is not an official Star Atlas metric and should not be used in your decision making for ship purchases. It uses information from the first Star Atlas Economics Report which suggests ship component performance is increased by a factor of 2.721 per ship class. We start at an arbitrary base number and apply this multiplier. In this calculation it is also assumed that base missile firepower is 2.721x base weapon firepower."
                   }
                 >
                   <div
